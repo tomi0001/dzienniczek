@@ -1,0 +1,155 @@
+body {
+  
+  
+ background-image: url('./tlo.png'); /* from http://subtlepatterns.com */
+  
+  
+  
+  
+  
+}
+
+#center {
+
+width: 1000px;
+margin-left: auto;
+margin-right: auto;
+
+}
+
+#login {
+
+width: 400px;
+height: 300px;
+background-color: blue;
+opacity: 0.5;
+border-radius: 20px;
+margin-left: auto;
+margin-right: auto;
+
+}
+#login_center {
+
+width: 400px;
+height: 150px;
+background-color: blue;
+opacity: 0.5;
+
+margin-left: auto;
+margin-right: auto;
+
+}
+#menu {
+border-radius: 20px;
+width: 980px;
+min-height: 150px;
+background-color: blue;
+opacity: 0.5;
+float: left;
+}
+#center2 {
+float: left;
+width: 100px;
+
+
+}
+.menu3 {
+border-radius: 20px;
+background-color: #32639C;
+width: 150px;
+
+
+}
+.menu4 {
+    
+   position:absolute;   
+    
+}
+#menu3 {
+border-radius: 20px;
+background-color: #32639C;
+width: 150px;
+ 
+}
+#page {
+border-radius: 20px;
+width: 980px;
+min-height: 500px;
+background-color: rgba(0,0,255,0.5);
+
+margin-left: auto;
+float: left;
+}
+span.menu2 {
+ font-size: 60px;
+ color: white;
+ text-align: center;
+  
+}
+span.login {
+ font-size: 20px;
+ color: white;
+ text-align: center;
+  
+}
+span.normalna3 {
+  color: #ebecb8;
+  
+}
+span.normalna4 {
+  color: #ebecb8;
+  
+}
+.tabela {
+    opacity: none;
+border-spacing: 1px;
+border-collapse: separate;
+
+
+}
+.komorka1 {
+    background-color: red;
+    
+}
+.komorka2 {
+    opacity: 0.5;
+    background-color: #105D9C;
+    
+}
+.komorka3 {
+    background-color: #BFA62A;
+    
+}
+.komorka4 {
+    
+    background-color: #000000;
+    
+}
+.komorka5 {
+    background-color: #333232;
+    
+}
+.komorka6 {
+    background-color: #242323;
+    
+}
+.komorka7 {
+    background-color: #636363;
+    
+}
+.komorka8 {
+    background-color: #8F8A2F;
+    
+}
+
+a.menu {color:#d1db37; font-size: 17px;}
+a.menu:hover {color:#B7BC2E; font-size: 17px;}
+a.kalendarz {color: #ebecb8; font-size: 17px;}
+a.kalendarz:hover {color: gray; font-size: 18px;}
+span.normalna2 {color: #d8e824; font-size: 17px;}
+span.wieksza{ color: #e1e31a; font-size: 19px;}
+span.pogrubiona {color:#dbe538;font-size: 21px;}
+span.blad {color:#FF0000;font-size: 16px;}
+span.succes {color:#c4b90c;font-size: 21px;}
+a.przycisk {color: #EBD323; font-size: 19px;}
+a.przycisk:hover {color: #EBD323; font-size: 19px;}
