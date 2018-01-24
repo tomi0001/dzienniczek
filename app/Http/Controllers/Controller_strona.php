@@ -16,13 +16,13 @@ class Controller_strona extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     
-    public $wpisy;
+    public $wpisy = array();
     public function glowna($rok = "",$miesiac = "",$dzien = "",$akcja = "") {
         //zmienna potrzebna do przechowywania ustawień zmiennych aktualnie wykonywanych do ustawień miesiąca
         $date = array();
         
         if (Auth::check()) {
-   
+   //for ($i = 0; $i  < 100000000;$i++) {}
         //to jest ta zmienna
         $date = $this->ustaw_date($miesiac,$akcja,$dzien,$rok);
         //zmienna potrzeba do tego, żeby zaznaczyć dzień miesiaca w kalendarzu
@@ -56,6 +56,7 @@ class Controller_strona extends BaseController
     //$date[2] = $day3;
   //}
   $tablica_godzin3 = array();
+  //for ($i=0;$i < 200;$i++) {
             $rok_zaczecia = $this->rok_zaczecia(Auth::User()->id);
             $sprawdz = $this->wyciagnij_godzine_ostatniego_wpisu(Auth::User()->id);
             if ($sprawdz == 0) {
@@ -77,65 +78,223 @@ class Controller_strona extends BaseController
             $tablica_godzin4 = $this->rysuj_dla_godziny(date("H"),2);
             //print $tablica_godzin3;
             $tablica_minut = $this->rysuj_dla_minuty();
-            $wynik = $this->wyciagnij_dane("poziom_nastroju",$date[1],$date[2],$date[0]);
+            $wynik = $this->wyciagnij_dane("poziom_nastroju",$date[1],$date[0]);
+            
             //print "<br>" . $wynik;
             //if (empty($bledy)) $bledy = "tomke";
             //print );
             //print "tablica godzin=";
-            //var_dump($tablica_godzin);
+            //print_r($wynik);
             //print "tablica godzin2=";
             //print $date[2];
             //$this->wybierz_nastroj_sen($date[1],$date[2],$date[0]);
             //print $date[2];
             //print $dzien;
+            //var_dump($this->wpisy);
             $this->wybierz_nastroj_sen($date[1],$date[2],$date[0]);
+            $this->okresl_dlugosc_daty_w_procentach();
+            $this->okres_kolor_dla_diva();
+            //}
+            //var_dump($this->wpisy);
             //var_dump($tablica_godzin);
-            return View('glowna')->with('miesiac',$date[0])->with('miesiac2',$miesiac2)->with('rok',$date[1])->with('jaki_dzien_miesiaca',$jaki_dzien_miesiaca)->with('dzien',$date[2])->with('dzien1',$dzien1)->with('dzien_tygodnia',$date[3])->with('dzien3',$dzien3)->with('dzien2',$dzien2)->with('dzien4',1)->with('nastepny',$nastepny)->with('poprzedni',$poprzedni)->with('rok_zaczecia',$rok_zaczecia)->with('tablica_godzin',$tablica_godzin)->with('tablica_godzin2',$tablica_godzin2)->with('tablica_minut',$tablica_minut)->with('tablica_minut2',$tablica_minut2)->with('tablica_godzin3',$tablica_godzin3)->with('tablica_godzin4',$tablica_godzin4)->with('wpisy',$this->wpisy);
-        }
+            return View('glowna')->with('miesiac',$date[0])->with('miesiac2',$miesiac2)->with('rok',$date[1])->with('jaki_dzien_miesiaca',$jaki_dzien_miesiaca)->with('dzien',$date[2])->with('dzien1',$dzien1)->with('dzien_tygodnia',$date[3])->with('dzien3',$dzien3)->with('dzien2',$dzien2)->with('dzien4',1)->with('nastepny',$nastepny)->with('poprzedni',$poprzedni)->with('rok_zaczecia',$rok_zaczecia)->with('tablica_godzin',$tablica_godzin)->with('tablica_godzin2',$tablica_godzin2)->with('tablica_minut',$tablica_minut)->with('tablica_minut2',$tablica_minut2)->with('tablica_godzin3',$tablica_godzin3)->with('tablica_godzin4',$tablica_godzin4)->with('wpisy',$this->wpisy)->with('wynik',$wynik);
+        }   
         else {
             return Redirect('blad')->with('login_error','Nie masz dostępu do tej części strony');
         }
         
     }
     
-    private function wyciagnij_dane($typ,$rok,$dzien,$miesiac) {
+    private function okres_kolor_dla_diva() {
+        for($i=0;$i < count($this->wpisy);$i++) {
+            if ($this->wpisy[$i][1] >= -20 and $this->wpisy[$i][1] < -16) $this->wpisy[$i][12] = "div1";
+            else if ($this->wpisy[$i][1] > -16 and $this->wpisy[$i][1] < -12) $this->wpisy[$i][12] = "div2";
+            else if ($this->wpisy[$i][1] > -12 and $this->wpisy[$i][1] < -9) $this->wpisy[$i][12] = "div3";
+            else if ($this->wpisy[$i][1] > -9 and $this->wpisy[$i][1] < -6) $this->wpisy[$i][12] = "div4";
+            else if ($this->wpisy[$i][1] > -6 and $this->wpisy[$i][1] <= -3) $this->wpisy[$i][12] = "div5";
+            else if ($this->wpisy[$i][1] > -3 and $this->wpisy[$i][1] < 0) $this->wpisy[$i][12] = "div6";
+            else if ($this->wpisy[$i][1] == 0) $this->wpisy[$i][12] = "div7";
+            else if ($this->wpisy[$i][1] > 0 and $this->wpisy[$i][1] < 4) $this->wpisy[$i][12] = "div8";
+            else if ($this->wpisy[$i][1] > 4 and $this->wpisy[$i][1] < 7) $this->wpisy[$i][12] = "div9";
+            else if ($this->wpisy[$i][1] > 7 and $this->wpisy[$i][1] < 10) $this->wpisy[$i][12] = "div10";
+            else if ($this->wpisy[$i][1] > 10 and $this->wpisy[$i][1] < 14) $this->wpisy[$i][12] = "div11";
+            else if ($this->wpisy[$i][1] > 14 and $this->wpisy[$i][1] < 20) $this->wpisy[$i][12] = "div12";
+            else $this->wpisy[$i][12] = "div13";
+        }
+        
+    }
+    
+    private function wyciagnij_dane($typ,$rok,$miesiac) {
         $id_users = Auth::User()->id;
         $dane_nastrojow = array();
-        $poszczegolne_dane = DB::select("select godzina_zaczecia,godzina_zakonczenia,$typ from nastroj where year(godzina_zaczecia) = '$rok'  and month(godzina_zaczecia) = '$miesiac' and day(godzina_zaczecia) = '$dzien' and id_users = '$id_users' order by godzina_zaczecia ASC");
+        $dane_nastrojow2 = array();
+        $poszczegolne_dane = DB::select("select nastroj,data from dni_nastrojow where year(data) = '$rok'  and month(data) = '$miesiac'  and id_dnia = '$id_users' order by data");
         $i = 0;
+        foreach ($poszczegolne_dane as $poszczegolne_dane2) {
+            $dane_nastrojow[$i][0] = $poszczegolne_dane2->nastroj;
+            $nowa_data = explode("-",$poszczegolne_dane2->data);
+            $dane_nastrojow[$i][1] = $nowa_data[2];
+            
+            $i++;
+        }
+        print "<font color=green>$i</font>";
+        $j = 0;
+        //var_dump($dane_nastrojow);
+        for ($i=0;$i <= 31;$i++) {
+
+            if (isset($dane_nastrojow[$j][0]) and  $i == $dane_nastrojow[$j][1]) {
+                print "kupa<br>";
+                $dane_nastrojow2[$i][0] = $dane_nastrojow[$j][1];
+                $dane_nastrojow2[$i][1] = $this->wybierz_kolor_dla_dnia($dane_nastrojow[$j][0]);
+                $j++;
+            }
+            else {
+                    //print "kurwa";
+                $dane_nastrojow2[$i][0] =  $i; 
+                $dane_nastrojow2[$i][1] = $this->wybierz_kolor_dla_dnia(null);
+            }
+            
+        }
+        print "<font color=red>$j</font>";
+        //print "<font color=red>$i</font>";
+        return $dane_nastrojow2;
+        /*$i = 0;
+        $j = 0;
+        //$wynik2[0] = 0;
+        //$wynik2[1] = 0;
+        //$wynik2[2] = 0;
+        //$wynik2[3] = 0;
+      //  var_dump($wynik2);
         $wynik2 = 0;
         $wynik3 = 0;
+        $wynik4  = array();
+        $dzien2 = array();
         foreach ($poszczegolne_dane as $poszczegolne_dane2) {
             $dane_nastrojow[$i][0] = $poszczegolne_dane2->godzina_zaczecia;
             $dane_nastrojow[$i][1] = $poszczegolne_dane2->godzina_zakonczenia;
             $dane_nastrojow[$i][2] = $poszczegolne_dane2->$typ;
-            $wynik = $this->oblicz_sume_nastrojow_dla_danego_dnia($dane_nastrojow[$i][0],$dane_nastrojow[$i][1],$dane_nastrojow[$i][2]);
+            $wynik = $this->oblicz_sume_nastrojow_dla_danego_przedzialu($dane_nastrojow[$i][0],$dane_nastrojow[$i][1],$dane_nastrojow[$i][2]);
             //print $wynik . " " .  77 $dane_nastrojow[$i][0] . "<br>";
+            
             $wynik2 += $wynik[0];
             $wynik3 += $wynik[1];
+            print $wynik2 . "<br>";
+            $dzien2[$i] = $poszczegolne_dane2->dzien;
+           // if ($i > 0) {
+                //$dzien = $poszczegolne_dane2->dzien -1;
+                //$dzien_miesiaca = explode(" ",$poszczegolne_dane2->godzina_zaczecia);
+                //$dzien_miesiaca2 = explode("-",$dzien_miesiaca[0]);
+                //print $dzien_miesiaca2[2]-1 . " " . $poszczegolne_dane2->dzien[$i] . "<br>";
+                if ( $i != 0 and $poszczegolne_dane2->dzien != $dzien2[$i-1] ) {
+                    //print "dupa";
+                    //$wynik2 = 0;
+                    
+                    $wynik4[$j][0] = $wynik2;
+                    print "<font color=#FFcc07>" . $wynik4[$j][0] . "</font>";
+                    $wynik4[$j][1] = $poszczegolne_dane2->dzien;
+                    //print $poszczegolne_dane2->dzien .  " " . $poszczegolne_dane2->dzien2 . "<br>" ;
+                    $wynik2 = 0;
+                    $wynik3 = 0;
+                    $j++;
+                    print "jacek";
+                    
+                }
+                else if ($i == 0) {
+                    
+                    //$wynik2 = 0;
+                    $wynik4[$j][0] = $wynik2[$j];
+                    $wynik4[$j][1] = $poszczegolne_dane2->dzien;
+                    $wynik2 = 0;
+                    $wynik3 = 0;
+                    $j++;
+                    print "jacek";
+                    //$wynik2 = 0;
+                    
+                }
+                //print $wynik3 . "<br>";
+            //}
+            
             $i++;
+            //$j++;
             
             
         }
         //print $wynik3;
-        $wynik4 = $wynik2 - $wynik3;
-        print $wynik4 . " " . $wynik3;
-        return $wynik2;
+        //$wynik4 = $wynik2 - $wynik3;
+        //print $wynik4 . " " . $wynik3;
+        var_dump($wynik4);
+        return $wynik4;
         //var_dump($dane_nastrojow);
+        */
+    }
+    private function okresl_dlugosc_daty_w_procentach() {
+    //print "<font color=red>sdfsf" .  $this->wpisy[$i][9] . "</font>";
+    //$tablica = $this->wpisy;
+  //  print "<font color=red>tomi" .  var_dump($tablica) . "</font>";
+    $wynik = array();
+        for ($i=0;$i < count($this->wpisy);$i++) {
+            $wynik[$i] = strtotime($this->wpisy[$i][2]) - strtotime($this->wpisy[$i][0]);
+            //$this->wpisy[$i][11] = $wynik[$i];
+            //print $wynik . "<Br>";
+            //$wynik[$i] = ($wynik[$i] / 4640) * 100;
+            //$this->wpisy[$i][11] = round($wynik[$i]);
+                
+        }
+        array_multisort($wynik,SORT_DESC);
+        var_dump($wynik);
+        $tymczasowa = 0;
+        for ($i=0;$i < count($this->wpisy);$i++) {
+            $tymczasowa = strtotime($this->wpisy[$i][2]) - strtotime($this->wpisy[$i][0]);
+            $this->wpisy[$i][11] = round(($tymczasowa / $wynik[0]) * 100);
+            if ($this->wpisy[$i][11] == 0) $this->wpisy[$i][11] = 1;
+        
+        }
+        //print "<font color=red><br>" . $wynik[1] . "<br></font>";
+        
+        
+    }
+    private function wybierz_kolor_dla_dnia($liczba) {
+        //print $liczba;
+        if ($liczba == "") {
+            //print "bardzo źle";
+            return  "komorka2";
+        
+        }
+        
+        else if ($liczba < -512000) return  "komorka4";
+        else if ($liczba < -200000) return "komorka5";
+        else if ($liczba < -90000) return "komorka13";
+        else if ($liczba < -9000) return "komorka14";
+        else if ($liczba < -1000) return "komorka15";
+        else if ($liczba > 512000) return  "komorka9";
+        else if ($liczba > 200000) return  "komorka3";
+        else if ($liczba > 90000) return  "komorka10";
+        else if ($liczba > 9000) return  "komorka11";
+        else if ($liczba > 1000) return "komorka12";
+        
+
+        else  return "komorka2";
+    
     }
     
-    private function oblicz_sume_nastrojow_dla_danego_dnia($godzina_zaczecia,$godzina_zakonczenia,$poziom) {
+    private function oblicz_sume_nastrojow_dla_danego_przedzialu($godzina_zaczecia,$godzina_zakonczenia,$poziom) {
         //for ($i=0;$i < count($typ_danych);$i++) {
-        
+        print "<font color=red>$poziom</font>";
         $wynik  = strtotime($godzina_zaczecia);
         $wynik2 = strtotime($godzina_zakonczenia);
         $wynik3 = $wynik2 - $wynik;
-        
-        $wynik4 = ($wynik3 * $poziom) + $wynik3;
-        //print $wynik3 . "<br>" .  $wynik4 .  "<Br>";
+        if($poziom > 0) {
+            $wynik4 = ($wynik3 * $poziom);
+        }
+        else {
+          //  print "gowno";
+            $wynik4 = ($wynik3 * $poziom);
+        }
+        print "<font color=green> $wynik4 </font>";
+        //print $wynik3 . "<br>"  .  $wynik4 .  "<Br>";
         return array($wynik4,$wynik3);
         //}
-        
+        //36000
         
     }
     private function wybierz_nastroj_sen($rok,$dzien,$miesiac) {
@@ -165,7 +324,8 @@ class Controller_strona extends BaseController
             $sen3[$i][1] = $sen2->ilosc_wybudzen;
             $sen3[$i][2] = $sen2->data_zakonczenia;
             $sen3[$i][3] = $sen2->id;
-            $sen3[$i][4] = true;
+            $sen3[$i][4] = false;
+            $sen3[$i][5] = -21;
             //print $nastroj3[$i][0] . "<br>";
             $i++;        
         }
@@ -176,6 +336,7 @@ class Controller_strona extends BaseController
     private function uporzadkuj_dane() {
         $data = new \App\Http\Controllers\data();
         $tablica = $this->wpisy;
+        
         //var_dump($tablica);
      //   $data->oblicz_jaki_jest_dzien('d','godzina_b');
         for ($i=0;$i < count($tablica);$i++) {
@@ -184,6 +345,7 @@ class Controller_strona extends BaseController
            $this->wpisy[$i][10] = $wynik[1];
             //print $wynik[0] . $wynik[1] . "<br>";
         }
+        //var_dump($this->wpisy);
         //return $wynik;
     }
     
@@ -213,8 +375,8 @@ class Controller_strona extends BaseController
 
             $nowa_tablica[$i][2] = $tablica2[$j][2];
             $nowa_tablica[$i][3] = $tablica2[$j][3];
-            $nowa_tablica[$i][4] = 0;
-            $nowa_tablica[$i][5] = 0;
+            $nowa_tablica[$i][4] = $tablica2[$j][4];
+            $nowa_tablica[$i][5] = $tablica2[$j][5];
             $nowa_tablica[$i][6] = 0;
             $nowa_tablica[$i][7] = 0;
             $nowa_tablica[$i][8] = 0;

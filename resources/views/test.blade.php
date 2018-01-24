@@ -17,6 +17,7 @@
 	  <tbody>
 @php
 $a = 0;
+$i = 0;
 @endphp
 
   @for ($wiersze=0;$wiersze < 7 and $dzien2 <= $jaki_dzien_miesiaca;$wiersze++) 
@@ -39,22 +40,8 @@ $a = 0;
         @if ($dzien1 >= $dzien_tygodnia )
             @if ( $dzien2 == $dzien3 or $dzien2 == $dzien )
             <td class="komorka1">
-            @elseif ($dzien1 == 15)
-            <td class="komorka1">
-            @elseif ($dzien1 == 16)
-            <td class="komorka3">
-            @elseif ($dzien1 == 17)
-            <td class="komorka4">
-            @elseif ($dzien1 == 18)
-            <td class="komorka5">
-            @elseif ($dzien1 == 19)
-            <td class="komorka6">
-            @elseif ($dzien1 == 20)
-            <td class="komorka7">
-            @elseif ($dzien1 == 21)
-            <td class="komorka8">
             @else
-            <td class="komorka2">
+            <td class="{{$wynik[$dzien2][1]}}">
             @endif
             @if ( $dzien2 == $dzien3 ) 
                 <div align=center><span class=wieksza>{{$dzien2}}</span></div>
@@ -71,7 +58,7 @@ $a = 0;
             $dzien2++;
         @endphp
         @else
-        <td class="komorka10">
+        <td>
        
         @endif
 	@php 
@@ -79,7 +66,9 @@ $a = 0;
 	@endphp
 	
     @endif
-
+        @php
+        $i++
+        @endphp
     @endfor
     </tr>
 

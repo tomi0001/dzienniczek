@@ -180,7 +180,13 @@ class Controller_dodawanie extends BaseController
         else {
            //ustawia datę czyli z 2018 i 01 i 01 robi 2018-01-01
            $data = $data3->ustaw_date($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b);
-           $id = $this->dodaj_nowy_nastroj($data11,$data22,$nastroj,$lek,$zdenerowanie,$co_robilem,$psychotyczne,$pobudzenie);
+           $nastroj_dnia = $this->oblicz_sume_nastrojow_dla_danego_przedzialu($data11,$data22,$nastroj);
+           $id_dnia = $this->zapisz_poziom_nastroju_dla_danego_dnia($data11,$nastroj_dnia);
+           //$id_dnia = 3;
+           
+           $id = $this->dodaj_nowy_nastroj($data11,$data22,$nastroj,$lek,$zdenerowanie,$co_robilem,$psychotyczne,$pobudzenie,$id_dnia);
+           
+           //print $nastroj_dnia;
            if ($wynik4 != 1) {
                //dodaje do bazy nowe leki
             $this->dodaj_nowe_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$id);
@@ -211,6 +217,47 @@ class Controller_dodawanie extends BaseController
         }
         //$this->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
     }
+    
+    private function zapisz_poziom_nastroju_dla_danego_dnia($data11,$nastroj_dnia) {
+        $id_user = Auth::User()->id;
+        $data = explode(" ",$data11);
+        $dni_nastrojow = DB::select("select nastroj,data from dni_nastrojow where id_dnia = '$id_user' and data = '$data[0]' ");
+        foreach ($dni_nastrojow as $dni_nastrojow2) {}
+        
+        if (empty($dni_nastrojow2->data) ) {
+            DB::insert("insert into dni_nastrojow(nastroj,data,id_dnia) values('$nastroj_dnia','" . $data[0] . "','$id_user')");
+        }
+        else {
+            DB::table('dni_nastrojow')
+            ->where('id_dnia', $id_user)->where('data',$data[0])
+            ->update(['nastroj' => $nastroj_dnia + $dni_nastrojow2->nastroj]);
+        }
+        $jakie_id = DB::select("select id from dni_nastrojow where id_dnia = '$id_user' order by id desc limit 1 ");
+        foreach ($jakie_id as $jakie_id2) {}
+        
+        return $jakie_id2->id;
+    }
+    private function oblicz_sume_nastrojow_dla_danego_przedzialu($godzina_zaczecia,$godzina_zakonczenia,$poziom) {
+        //for ($i=0;$i < count($typ_danych);$i++) {
+        //print "<font color=red>$poziom</font>";
+        $wynik  = strtotime($godzina_zaczecia);
+        $wynik2 = strtotime($godzina_zakonczenia);
+        $wynik3 = $wynik2 - $wynik;
+        if($poziom > 0) {
+            $wynik4 = ($wynik3 * $poziom);
+        }
+        else {
+          //  print "gowno";
+            $wynik4 = ($wynik3 * $poziom);
+        }
+        //print "<font color=green> $wynik4 </font>";
+        //print $wynik3 . "<br>"  .  $wynik4 .  "<Br>";
+        return $wynik4;
+        //}
+        //36000
+        
+    }
+    
     private function dodaj_przekierowanie_leku($id_leku,$id_nastroju) {
         DB::insert("insert into przekierowanie_lekow  (id_leku,id_nastroj) values('$id_leku','$id_nastroju')");
     }
@@ -240,11 +287,11 @@ class Controller_dodawanie extends BaseController
             return 0;
         }
     }
-    private function dodaj_nowy_nastroj($data1,$data2,$nastroj,$lek,$zdenerowanie,$co_robilem,$psychotyczne,$pobudzenie) {
+    private function dodaj_nowy_nastroj($data1,$data2,$nastroj,$lek,$zdenerowanie,$co_robilem,$psychotyczne,$pobudzenie,$nastroj_dnia) {
         //print "dobrze";
         if ($psychotyczne == "") $psychotyczne = 0;
         $id_users = Auth::User()->id;
-        DB::insert("insert into nastroj  (godzina_zaczecia,godzina_zakonczenia,id_users,poziom_nastroju,co_robilem,poziom_leku,poziom_zdenerwania,epizod_psychotyczne,pobudzenie ) values('$data1','$data2','$id_users','$nastroj','$co_robilem','$lek','$zdenerowanie','$psychotyczne',$pobudzenie)");
+        DB::insert("insert into nastroj  (godzina_zaczecia,godzina_zakonczenia,id_users,poziom_nastroju,co_robilem,poziom_leku,poziom_zdenerwania,epizod_psychotyczne,pobudzenie,id_dnia ) values('$data1','$data2','$id_users','$nastroj','$co_robilem','$lek','$zdenerowanie','$psychotyczne','$pobudzenie','$nastroj_dnia')");
         $id = DB::select("select id from nastroj where id_users = '$id_users' order by id DESC limit 1");
         foreach ($id as $id2) {}
         print $id2->id;

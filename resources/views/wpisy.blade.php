@@ -8,22 +8,54 @@
         {{$wpisy[$i][10]}}
     </div>
 </div>
+@if ($wpisy[$i][5] == -21)
+
+
+
+{{$wpisy[$i][4]}}
+
+
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+
+</div>
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+    <div class="col-md-8 col-xs-8">
+        <div class="sen" style="width: {{$wpisy[$i][11]}}%;"}>&nbsp;</div>
+    </div>
+    
+</div>
+
+
+@else
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-2 col-xs-2">
-        Poziom nastroju {{$wpisy[$i][1]}}
+        Poziom nastroju {{$wpisy[$i][1]}} 
     </div>
     <div class="col-md-2 col-xs-2">
         Poziom lęku {{$wpisy[$i][5]}}
     </div>
     <div class="col-md-2 col-xs-2">
-        Poziom zdenerowania {{$wpisy[$i][6]}}
+        zdenerowania {{$wpisy[$i][6]}}
     </div>
     <div class="col-md-2 col-xs-2">
-        Poziom pobudzenia {{$wpisy[$i][8]}}
+        pobudzenia {{$wpisy[$i][8]}}
     </div>
 </div>
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+    <div class="col-md-8 col-xs-8">
+        <div class="nastroj {{$wpisy[$i][12]}}" style="width: {{$wpisy[$i][11]}}%;"}>&nbsp;</div>
+    </div>
+    
+</div>
+@endif
+<br>
 @endfor
+
+
 <div class="row">
   <form action={{ url('dodaj_wpis') }} method=post>
   <div class="col-md-1 col-xs-1"></div>
