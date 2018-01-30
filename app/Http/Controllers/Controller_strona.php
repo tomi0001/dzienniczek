@@ -18,6 +18,7 @@ class Controller_strona extends BaseController
     
     public $wpisy = array();
     public function glowna($rok = "",$miesiac = "",$dzien = "",$akcja = "") {
+    
         //zmienna potrzebna do przechowywania ustawień zmiennych aktualnie wykonywanych do ustawień miesiąca
         $date = array();
         
@@ -55,6 +56,7 @@ class Controller_strona extends BaseController
     //}
     //$date[2] = $day3;
   //}
+  
   $tablica_godzin3 = array();
   //for ($i=0;$i < 200;$i++) {
             $rok_zaczecia = $this->rok_zaczecia(Auth::User()->id);
@@ -78,7 +80,15 @@ class Controller_strona extends BaseController
             $tablica_godzin4 = $this->rysuj_dla_godziny(date("H"),2);
             //print $tablica_godzin3;
             $tablica_minut = $this->rysuj_dla_minuty();
+            //for ($i=0;$i < 200;$i++) {
             $wynik = $this->wyciagnij_dane("poziom_nastroju",$date[1],$date[0]);
+            //$wynik2 = $this->wyciagnij_dane_dla_poszczegolnego_dnia_nastroju($date[2],$date[1],$date[0]);
+            $wynik2 = $this->wyciagnij_dane("poziom_nastroju",$date[1],$date[0],$date[2]);
+            
+           // var_dump($wynik2);
+            //var_dump($wynik);
+           // print "<font color=green>$wynik2</font>";
+           //$wynik2 = 0;
             
             //print "<br>" . $wynik;
             //if (empty($bledy)) $bledy = "tomke";
@@ -94,10 +104,15 @@ class Controller_strona extends BaseController
             $this->wybierz_nastroj_sen($date[1],$date[2],$date[0]);
             $this->okresl_dlugosc_daty_w_procentach();
             $this->okres_kolor_dla_diva();
+            $ilosc_nastrojow = count($this->wpisy);
+           // }
+            //print "<font color=red>";
+            //var_dump($this->wpisy);
+            //print "</font";
             //}
             //var_dump($this->wpisy);
             //var_dump($tablica_godzin);
-            return View('glowna')->with('miesiac',$date[0])->with('miesiac2',$miesiac2)->with('rok',$date[1])->with('jaki_dzien_miesiaca',$jaki_dzien_miesiaca)->with('dzien',$date[2])->with('dzien1',$dzien1)->with('dzien_tygodnia',$date[3])->with('dzien3',$dzien3)->with('dzien2',$dzien2)->with('dzien4',1)->with('nastepny',$nastepny)->with('poprzedni',$poprzedni)->with('rok_zaczecia',$rok_zaczecia)->with('tablica_godzin',$tablica_godzin)->with('tablica_godzin2',$tablica_godzin2)->with('tablica_minut',$tablica_minut)->with('tablica_minut2',$tablica_minut2)->with('tablica_godzin3',$tablica_godzin3)->with('tablica_godzin4',$tablica_godzin4)->with('wpisy',$this->wpisy)->with('wynik',$wynik);
+            return View('glowna')->with('miesiac',$date[0])->with('miesiac2',$miesiac2)->with('rok',$date[1])->with('jaki_dzien_miesiaca',$jaki_dzien_miesiaca)->with('dzien',$date[2])->with('dzien1',$dzien1)->with('dzien_tygodnia',$date[3])->with('dzien3',$dzien3)->with('dzien2',$dzien2)->with('dzien4',1)->with('nastepny',$nastepny)->with('poprzedni',$poprzedni)->with('rok_zaczecia',$rok_zaczecia)->with('tablica_godzin',$tablica_godzin)->with('tablica_godzin2',$tablica_godzin2)->with('tablica_minut',$tablica_minut)->with('tablica_minut2',$tablica_minut2)->with('tablica_godzin3',$tablica_godzin3)->with('tablica_godzin4',$tablica_godzin4)->with('wpisy',$this->wpisy)->with('wynik',$wynik)->with('ilosc_nastrojow',$ilosc_nastrojow)->with('wynik2',$wynik2);
         }   
         else {
             return Redirect('blad')->with('login_error','Nie masz dostępu do tej części strony');
@@ -105,6 +120,26 @@ class Controller_strona extends BaseController
         
     }
     
+    private function sprawdz_czy_bralem_leki_dla_danego_dnia($id_nastroj) {
+        $sprawdz = DB::select("SELECT id_nastroj FROM `przekierowanie_lekow` WHERE id_nastroj = '$id_nastroj' ");
+        foreach ($sprawdz as $sprawdz2) {
+            if ( isset($sprawdz2->id_nastroj) ) return true;
+            else return false;
+        }
+        
+        
+        
+        
+    }
+    private function sprawdz_czy_cos_robilem($id_nastroj) {
+        $sprawdz = DB::select("select co_robilem from nastroj where id = '$id_nastroj' ");
+        foreach ($sprawdz as $sprawdz2) {
+            
+        }
+        if ($sprawdz2->co_robilem == "") return false;
+        else return true;
+        
+    }
     private function okres_kolor_dla_diva() {
         for($i=0;$i < count($this->wpisy);$i++) {
             if ($this->wpisy[$i][1] >= -20 and $this->wpisy[$i][1] < -16) $this->wpisy[$i][12] = "div1";
@@ -123,12 +158,40 @@ class Controller_strona extends BaseController
         }
         
     }
-    
-    private function wyciagnij_dane($typ,$rok,$miesiac) {
+    private function wyciagnij_dane_dla_poszczegolnego_dnia_nastroju($dzien,$rok,$miesiac) {
         $id_users = Auth::User()->id;
+        $poszczegolne_dane = DB::select("select nastroj,data from dni_nastrojow where year(data) = '$rok'  and month(data) = '$miesiac' and day(data)=  '$dzien' and id_dnia = '$id_users' order by data");
+        foreach ($poszczegolne_dane as $poszczegolne_dane2) {
+            
+        }
+        $wynik = $this->oblicz_ile_czasu_trwaly_nastroje_danego_dnia($rok,$miesiac,$dzien);
+        //print "<font color=green>" . $poszczegolne_dane2->nastroj . "</font>";
+        if (empty($poszczegolne_dane2->nastroj) ) return null;
+        else return (int)round(( $wynik[1] / $wynik[0] ));
+    }
+    private function oblicz_ile_czasu_trwaly_nastroje_danego_dnia($rok,$miesiac,$dzien,$typ) {
+        $id_users = Auth::User()->id;
+        $nastroje = array();
+        $wynik = 0;
+        $wynik2 = 0;
+        $wynik5 = 0;
+        $poszczegolne_dane = DB::select("select godzina_zaczecia,godzina_zakonczenia,$typ from nastroj where year(godzina_zaczecia) = '$rok'  and month(godzina_zaczecia) = '$miesiac' and day(godzina_zaczecia) = '$dzien'  and id_users = '$id_users'");
+        foreach ($poszczegolne_dane as $poszczegolne_dane2) {
+            $wynik2 = strtotime($poszczegolne_dane2->godzina_zaczecia);
+            $wynik3 = strtotime($poszczegolne_dane2->godzina_zakonczenia);
+            $wynik4 = $wynik3 - $wynik2;
+            $wynik5 = $wynik5 + ($wynik4 * $poszczegolne_dane2->$typ);
+            $wynik += $wynik4;
+            
+        }
+        return array($wynik,$wynik5);
+    }
+    private function wyciagnij_dane($typ,$rok,$miesiac,$dzien="") {
+        $id_users = Auth::User()->id;
+        /*
         $dane_nastrojow = array();
         $dane_nastrojow2 = array();
-        $poszczegolne_dane = DB::select("select nastroj,data from dni_nastrojow where year(data) = '$rok'  and month(data) = '$miesiac'  and id_dnia = '$id_users' order by data");
+        $poszczegolne_dane = DB::select("select nastroj,data,liczba_sekund from dni_nastrojow where year(data) = '$rok'  and month(data) = '$miesiac'  and id_dnia = '$id_users' order by data");
         $i = 0;
         foreach ($poszczegolne_dane as $poszczegolne_dane2) {
             $dane_nastrojow[$i][0] = $poszczegolne_dane2->nastroj;
@@ -137,25 +200,52 @@ class Controller_strona extends BaseController
             
             $i++;
         }
-        print "<font color=green>$i</font>";
+       // print "<font color=green>$i</font>";
         $j = 0;
         //var_dump($dane_nastrojow);
-        for ($i=0;$i <= 31;$i++) {
+        */
+        //$poszczegolne_dane = DB::select("select poziom_nastroju from nastroj where year(godzina_zaczecia) = '$rok'  and month(godzina_zaczecia) = '$miesiac'  and id_users = '$id_users'  order by data");
+        $dane_nastrojow2 = array();
+        if ($dzien != "") {
+            
+            $j = $dzien;
+            $k = $dzien;
+        }
+        else {
+            $j = 0;
+            $k = 31;
+        }
+        $m = 0;
+        for ($i=$j;$i <= $k;$i++) {
 
-            if (isset($dane_nastrojow[$j][0]) and  $i == $dane_nastrojow[$j][1]) {
-                print "kupa<br>";
-                $dane_nastrojow2[$i][0] = $dane_nastrojow[$j][1];
-                $dane_nastrojow2[$i][1] = $this->wybierz_kolor_dla_dnia($dane_nastrojow[$j][0]);
-                $j++;
-            }
-            else {
+            //if (isset($dane_nastrojow[$j][0]) and  $i == $dane_nastrojow[$j][1]) {
+              //  print "dobrze";
+                $wynik = $this->oblicz_ile_czasu_trwaly_nastroje_danego_dnia($rok,$miesiac,$i,$typ);
+                //print "<font color=green>" . $i  .  "<br>" . "$wynik</font><br>";
+                //if ($poszczegolne_dane2->liczba_sekund == 0) {
+                  // $dane_nastrojow2[$i][0] = 0; 
+                //}
+                //else {
+                    //print "<font color=yellow>" . $poszczegolne_dane2->nastroj . " " .  $wynik . "</font>" ;
+                    if ($wynik[0] == 0) {
+                        $dane_nastrojow2[$m][0] = 23;
+                    }
+                    else {
+                        $dane_nastrojow2[$m][0] = (int)round((($wynik[1] / $wynik[0] )));
+                    }
+                //}
+                $dane_nastrojow2[$m][1] = $this->wybierz_kolor_dla_dnia($dane_nastrojow2[$m][0]);
+                //$j++;
+            //}
+            //else {
                     //print "kurwa";
-                $dane_nastrojow2[$i][0] =  $i; 
-                $dane_nastrojow2[$i][1] = $this->wybierz_kolor_dla_dnia(null);
-            }
+               // $dane_nastrojow2[$i][0] =  $i; 
+               // $dane_nastrojow2[$i][1] = $this->wybierz_kolor_dla_dnia(null);
+            //}
+            $m++;
             
         }
-        print "<font color=red>$j</font>";
+        //print "<font color=red>$j</font>";
         //print "<font color=red>$i</font>";
         return $dane_nastrojow2;
         /*$i = 0;
@@ -245,8 +335,8 @@ class Controller_strona extends BaseController
         $tymczasowa = 0;
         for ($i=0;$i < count($this->wpisy);$i++) {
             $tymczasowa = strtotime($this->wpisy[$i][2]) - strtotime($this->wpisy[$i][0]);
-            $this->wpisy[$i][11] = round(($tymczasowa / $wynik[0]) * 100);
-            if ($this->wpisy[$i][11] == 0) $this->wpisy[$i][11] = 1;
+            $this->wpisy[$i][14] = round(($tymczasowa / $wynik[0]) * 100);
+            if ($this->wpisy[$i][14] == 0) $this->wpisy[$i][11] = 1;
         
         }
         //print "<font color=red><br>" . $wynik[1] . "<br></font>";
@@ -255,25 +345,41 @@ class Controller_strona extends BaseController
     }
     private function wybierz_kolor_dla_dnia($liczba) {
         //print $liczba;
-        if ($liczba == "") {
+        
+        if ($liczba == 0 ) {
             //print "bardzo źle";
-            return  "komorka2";
+            return  "div14 radios";
         
         }
         
-        else if ($liczba < -512000) return  "komorka4";
-        else if ($liczba < -200000) return "komorka5";
-        else if ($liczba < -90000) return "komorka13";
-        else if ($liczba < -9000) return "komorka14";
-        else if ($liczba < -1000) return "komorka15";
-        else if ($liczba > 512000) return  "komorka9";
-        else if ($liczba > 200000) return  "komorka3";
-        else if ($liczba > 90000) return  "komorka10";
-        else if ($liczba > 9000) return  "komorka11";
-        else if ($liczba > 1000) return "komorka12";
+        /*
+                  else if ($this->wpisy[$i][1] > -16 and $this->wpisy[$i][1] < -12) $this->wpisy[$i][12] = "div2";
+            else if ($this->wpisy[$i][1] > -12 and $this->wpisy[$i][1] < -9) $this->wpisy[$i][12] = "div3";
+            else if ($this->wpisy[$i][1] > -9 and $this->wpisy[$i][1] < -6) $this->wpisy[$i][12] = "div4";
+            else if ($this->wpisy[$i][1] > -6 and $this->wpisy[$i][1] <= -3) $this->wpisy[$i][12] = "div5";
+            else if ($this->wpisy[$i][1] > -3 and $this->wpisy[$i][1] < 0) $this->wpisy[$i][12] = "div6";
+            else if ($this->wpisy[$i][1] == 0) $this->wpisy[$i][12] = "div7";
+            else if ($this->wpisy[$i][1] > 0 and $this->wpisy[$i][1] < 4) $this->wpisy[$i][12] = "div8";
+            else if ($this->wpisy[$i][1] > 4 and $this->wpisy[$i][1] < 7) $this->wpisy[$i][12] = "div9";
+            else if ($this->wpisy[$i][1] > 7 and $this->wpisy[$i][1] < 10) $this->wpisy[$i][12] = "div10";
+            else if ($this->wpisy[$i][1] > 10 and $this->wpisy[$i][1] < 14) $this->wpisy[$i][12] = "div11";
+            else if ($this->wpisy[$i][1] > 14 and $this->wpisy[$i][1] < 20) $this->wpisy[$i][12] = "div12";
+        
+        */
+        if ($liczba > 22) return "div11 opacity";
+        else if ($liczba >= -20 and $liczba < -12) return  "div2 radios";
+        else if ($liczba > -12 and $liczba < -9) return "div3 radios";
+        else if ($liczba > -9 and $liczba < -6) return "div4 radios";
+        else if ($liczba > -6 and $liczba < -3) return "div5 radios";
+        else if ($liczba > -3 and $liczba < 0) return "div6 radios";
+        else if ($liczba > 0 and $liczba <= 4) return  "div8 radios";
+        else if ($liczba > 4 and $liczba < 7) return  "div9 radios";
+        else if ($liczba > 7 and $liczba < 10) return  "div10 radios";
+        else if ($liczba > 10 and $liczba < 14) return  "div11 radios";
+        else if ($liczba > 14 and $liczba <= 20) return "div12 radios";
         
 
-        else  return "komorka2";
+        else  return "div11 opacity";
     
     }
     
@@ -298,7 +404,16 @@ class Controller_strona extends BaseController
         
     }
     private function wybierz_nastroj_sen($rok,$dzien,$miesiac) {
+        $data = new \App\Http\Controllers\data();
         $id_users = Auth::User()->id;
+        $data1  = $rok . "-" . $miesiac . "-" . $dzien;
+        $data2 = strtotime($data1);
+        
+        $data2 = $data2 -  86400;
+        //var_dump($data2);
+        $data3 = date("Y-m-d",$data2);
+        $data4= explode("-",$data3);
+        //var_dump($data4);
         $nastroj3 = array();
         $nastroj = DB::select("select godzina_zaczecia,poziom_nastroju,id,godzina_zakonczenia,co_robilem,poziom_leku,poziom_zdenerwania,epizod_psychotyczne,pobudzenie from nastroj where year(godzina_zaczecia) = '$rok'  and month(godzina_zaczecia) = '$miesiac' and day(godzina_zaczecia) = '$dzien' and id_users = '$id_users' order by godzina_zaczecia ASC");
         $i = 0;
@@ -307,25 +422,28 @@ class Controller_strona extends BaseController
             $nastroj3[$i][1] = $nastroj2->poziom_nastroju;
             $nastroj3[$i][2] = $nastroj2->godzina_zakonczenia;
             $nastroj3[$i][3] = $nastroj2->id;
-            $nastroj3[$i][4] = $nastroj2->co_robilem;
+            $nastroj3[$i][4] = $data->oblicz_ilosc_minut_i_godzin2($nastroj3[$i][0],$nastroj3[$i][2]);
             $nastroj3[$i][5] = $nastroj2->poziom_leku;
             $nastroj3[$i][6] = $nastroj2->poziom_zdenerwania;
             $nastroj3[$i][7] = $nastroj2->epizod_psychotyczne;
             $nastroj3[$i][8] = $nastroj2->pobudzenie;
+            $nastroj3[$i][9] = $this->sprawdz_czy_bralem_leki_dla_danego_dnia($nastroj2->id);
+            $nastroj3[$i][13] = $this->sprawdz_czy_cos_robilem($nastroj2->id);
             //print $nastroj3[$i][0] . "<br>";
             $i++;
             
         }
         $sen3 = array();
-        $sen = DB::select("select data_rozpoczecia,ilosc_wybudzen,data_zakonczenia,id from sen where  year(data_rozpoczecia) = '$rok'  and month(data_rozpoczecia) = '$miesiac' and day(data_rozpoczecia) = '$dzien' ");
+        $sen = DB::select("select data_rozpoczecia,ilosc_wybudzen,data_zakonczenia,id from sen where  (year(data_rozpoczecia) = '$rok'  and month(data_rozpoczecia) = '$miesiac' and (day(data_rozpoczecia) = '$dzien') or (day(data_rozpoczecia) = '$data4[2]')  and day(data_zakonczenia) !=  day(data_rozpoczecia) )and id_users = '$id_users' order by data_rozpoczecia ASC ");
         $i = 0;
         foreach ($sen as $sen2) {
             $sen3[$i][0] = $sen2->data_rozpoczecia;
             $sen3[$i][1] = $sen2->ilosc_wybudzen;
             $sen3[$i][2] = $sen2->data_zakonczenia;
             $sen3[$i][3] = $sen2->id;
-            $sen3[$i][4] = false;
+            $sen3[$i][4] = $data->oblicz_ilosc_minut_i_godzin2($sen3[$i][0],$sen3[$i][2]);
             $sen3[$i][5] = -21;
+            //$sen3[$i][13] = 0;
             //print $nastroj3[$i][0] . "<br>";
             $i++;        
         }
@@ -341,8 +459,8 @@ class Controller_strona extends BaseController
      //   $data->oblicz_jaki_jest_dzien('d','godzina_b');
         for ($i=0;$i < count($tablica);$i++) {
            $wynik =  $data->oblicz_jaki_jest_dzien($tablica[$i][0],$tablica[$i][2]);
-           $this->wpisy[$i][9] = $wynik[0];
-           $this->wpisy[$i][10] = $wynik[1];
+           $this->wpisy[$i][10] = $wynik[0];
+           $this->wpisy[$i][11] = $wynik[1];
             //print $wynik[0] . $wynik[1] . "<br>";
         }
         //var_dump($this->wpisy);
@@ -362,8 +480,9 @@ class Controller_strona extends BaseController
             $nowa_tablica[$i][6] = $tablica1[$i][6];
             $nowa_tablica[$i][7] = $tablica1[$i][7];
             $nowa_tablica[$i][8] = $tablica1[$i][8];
+            $nowa_tablica[$i][9] = $tablica1[$i][9];
             //$nowa_tablica[$i][9] = strtotime($tablica1[$i][0]);
-            //$nowa_tablica[$i][9] = $tablica1[$i][9];
+            $nowa_tablica[$i][13] = $tablica1[$i][13];
             $i++;
         }
         $j = 0;
@@ -380,6 +499,8 @@ class Controller_strona extends BaseController
             $nowa_tablica[$i][6] = 0;
             $nowa_tablica[$i][7] = 0;
             $nowa_tablica[$i][8] = 0;
+            $nowa_tablica[$i][9] = 0;
+            $nowa_tablica[$i][13] = 0;
             $i++;
             $j++;
         }
@@ -572,7 +693,7 @@ class Controller_strona extends BaseController
         
     }
     
-    
+
     
         private function ustaw_date($miesiac,$akcja,$dzien,$rok) {
             

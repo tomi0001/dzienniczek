@@ -1,10 +1,10 @@
 
 
-	<table width=700 height=400 align=center class='tabela'>
-	  <tr height=50>
+	<table  align=center class='tabela'>
+	  <tr class=tr>
 	    <td colspan=7><div align=center><span class=pogrubiona>{{$miesiac2}} {{$rok}}</span></div></td>
 	  </tr>
-	  <tr height=50>
+	  <tr class=tr>
 	  </tr>
 	    <td width='14%'><div align=center><span class=normalna2>Pon</span></div></td>
 	    <td width='14%'><div align=center><span class=normalna2>Wto</span></div></td>
@@ -51,7 +51,11 @@ $i = 0;
 	  
 
             @else
+                @if (isset($wynik[$dzien2][0]) and ($wynik[$dzien2][1] == "div11 opacity" or $wynik[$dzien2][1] == "div2 radios"))
+                <div align=center><a class=kalendarz2 href={{   url('glowna')}}/{{$rok}}/{{$miesiac}}/{{$dzien2}}  }}>{{$dzien2}}</a>
+                @else
                 <div align=center><a class=kalendarz href={{   url('glowna')}}/{{$rok}}/{{$miesiac}}/{{$dzien2}}  }}>{{$dzien2}}</a></div>
+                @endif
             @endif
         </td>
         @php

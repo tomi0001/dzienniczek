@@ -8,6 +8,103 @@ body {
   
   
 }
+@media (min-width: 1025px) {
+    
+    #center {
+
+width: 1330px;
+margin-left: auto;
+margin-right: auto;
+
+}
+.tabela {
+    opacity: none;
+border-spacing: 1px;
+border-collapse: separate;
+width: 820px;
+height: 550px;
+
+}
+.tr {
+ height: 65px;   
+    
+    
+}
+#login {
+
+width: 400px;
+height: 300px;
+background-color: blue;
+opacity: 0.5;
+border-radius: 20px;
+margin-left: auto;
+margin-right: auto;
+
+}
+#login_center {
+
+width: 400px;
+height: 150px;
+background-color: blue;
+opacity: 0.5;
+
+margin-left: auto;
+margin-right: auto;
+
+}
+#menu {
+border-radius: 20px;
+width: 1330px;
+min-height: 150px;
+background-color: blue;
+opacity: 0.5;
+float: left;
+}
+#center2 {
+float: left;
+width: 150px;
+
+
+}
+.menu3 {
+border-radius: 8px;
+background-color: #244CAB;
+width: 210px;
+color: white;
+
+}
+.menu4 {
+    
+   position:absolute;   
+    
+}
+#menu3 {
+border-radius: 8px;
+background-color: #244CAB;
+width: 210px;
+ color: white;
+}
+#page {
+border-radius: 20px;
+width: 1330px;
+min-height: 500px;
+background-color: rgba(0,0,255,0.5);
+
+margin-left: auto;
+float: left;
+}
+.nastroj {
+ width: 200px;
+
+ border-radius: 25px;   
+}
+    
+    
+}
+
+@media  (min-width: 400px) and (max-width: 1025px) {
+    /* STYLES HERE */
+
 
 #center {
 
@@ -53,6 +150,19 @@ width: 100px;
 
 
 }
+.tabela {
+    opacity: none;
+border-spacing: 1px;
+border-collapse: separate;
+width: 700px;
+height: 400px;
+
+}
+.tr {
+ height: 65px;   
+    
+    
+}
 .menu3 {
 border-radius: 20px;
 background-color: #32639C;
@@ -84,7 +194,7 @@ float: left;
  width: 200px;
 
  border-radius: 25px;   
-    
+}
 }
 span.menu2 {
  font-size: 60px;
@@ -106,76 +216,90 @@ span.normalna4 {
   color: #ebecb8;
   
 }
-.tabela {
-    opacity: none;
-border-spacing: 1px;
-border-collapse: separate;
 
-
-}
 .komorka1 {
     background-color: red;
-    
+    border-radius: 10px;   
 }
 
 .komorka2 {
     opacity: 0.5;
     background-color: #105D9C;
+    border-radius: 10px;   
     
 }
 .komorka3 {
     background-color: #BFA62A;
+    border-radius: 10px;   
     
 }
 .komorka4 {
     
     background-color: #000000;
+    border-radius: 10px;   
     
 }
 .komorka5 {
     background-color: #333232;
+    border-radius: 10px;   
     
 }
 .komorka6 {
     background-color: #242323;
+    border-radius: 10px;   
     
 }
 .komorka7 {
     background-color: #636363;
+    border-radius: 10px;   
     
 }
 .komorka8 {
     background-color: #8F8A2F;
+    border-radius: 10px;   
     
 }
 .komorka9 {
     background-color: #7AC920;
+    border-radius: 10px;   
     
 }
 .komorka10 {
     background-color: #EBEB2F;
+    border-radius: 10px;   
     
 }
 .komorka11 {
     background-color: #8A8A34;
+    border-radius: 10px;   
     
 }
 .komorka12 {
     background-color: #8F8F49;
+    border-radius: 10px;   
     
 }
 .komorka13 {
     background-color: #616155;
+    border-radius: 10px;   
     
 }
 .komorka14 {
     background-color: #666666;
+    border-radius: 10px;   
     
 }
 .komorka15 {
     background-color: #7D7979;
+    border-radius: 10px;   
     
 }
+.komorka16 {
+    background-color: white;
+    border-radius: 10px;   
+    
+}
+
 
 
 .div1 {
@@ -199,15 +323,15 @@ border-collapse: separate;
     
 }
 .div6 {
- background-color: #AB9737;
+ background-color: #CCC8B6;
     
 }
 .div7 {
- background-color: #8CB224;
+ background-color: #E5F2C2;
     
 }
 .div8 {
- background-color: #A0CF1F;
+ background-color: #E5E345;
     
 }
 .div9 {
@@ -220,10 +344,45 @@ border-collapse: separate;
     
 }
 
+.div11 {
+ background-color: #105D9C;  
+ color: white;
 
+}
 
-.div13 {
+.div12 {
  background-color: green;
+    
+}
+.div14 {
+    
+ background-color: #F0EDB4;
+}
+.ostrzezenie {
+    color: white;
+}
+.obramowanie {
+    background-color: #1F3D8F;
+    color: white;
+    border-radius: 25px; 
+    
+}
+.opacity {
+   opacity: 0.5; 
+}
+.radios {
+    border-radius: 10px; 
+    
+}
+.obramowanie2 {
+    background-color: red;
+    color: white;
+    border-radius: 25px; 
+    
+}
+
+.odstep {
+    padding-top: 30px;
     
 }
 .sen {
@@ -232,10 +391,23 @@ border-collapse: separate;
     border-radius: 25px;   
     
 }
+.tlo {
+    background-color: #20042E;
+    border-radius: 5px;  
+    color: white;
+    opacity: 0.7;
+}
+.usun_lek {
+    background-color: #20042E;
+    border-radius: 25px; 
+    color: white;
+}
 a.menu {color:#d1db37; font-size: 17px;}
 a.menu:hover {color:#B7BC2E; font-size: 17px;}
-a.kalendarz {color: #ebecb8; font-size: 17px;}
+a.kalendarz {color: #3D5C07; font-size: 17px;}
 a.kalendarz:hover {color: gray; font-size: 18px;}
+a.kalendarz2 {color: white; font-size: 17px;}
+a.kalendarz2:hover {color: gray; font-size: 18px;}
 span.normalna2 {color: #d8e824; font-size: 17px;}
 span.wieksza{ color: #e1e31a; font-size: 19px;}
 span.pogrubiona {color:#dbe538;font-size: 21px;}

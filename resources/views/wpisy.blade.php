@@ -1,18 +1,24 @@
+<body onload="ukryj_nastroje({{$ilosc_nastrojow}})">
+{{$wynik2[0][0]}}
 @for ($i=0;$i < count($wpisy);$i++)
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-3 col-xs-3">
-        {{$wpisy[$i][9]}}
+        <div class="tlo">
+        {{$wpisy[$i][10]}}
+        </div>
     </div>
     <div class="col-md-3 col-xs-3">
-        {{$wpisy[$i][10]}}
+        <div class="tlo">
+        {{$wpisy[$i][11]}}
+        </div>
     </div>
 </div>
 @if ($wpisy[$i][5] == -21)
 
 
 
-{{$wpisy[$i][4]}}
+
 
 
 <div class="row">
@@ -22,34 +28,88 @@
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-8 col-xs-8">
-        <div class="sen" style="width: {{$wpisy[$i][11]}}%;"}>&nbsp;</div>
+        <div class="sen" style="width: {{$wpisy[$i][14]}}%;"}>&nbsp;</div>
     </div>
     
 </div>
-
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+    <div class="col-md-4 col-xs-4">
+         Łączny czas snu {{$wpisy[$i][4]}}
+    </div>
+    <div class="col-md-2 col-xs-2">
+        
+    </div>
+</div>
 
 @else
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-2 col-xs-2">
+        <div class="tlo">
         Poziom nastroju {{$wpisy[$i][1]}} 
+        </div>
     </div>
     <div class="col-md-2 col-xs-2">
+        <div class="tlo">
         Poziom lęku {{$wpisy[$i][5]}}
+        </div>
     </div>
     <div class="col-md-2 col-xs-2">
+        <div class="tlo">
         zdenerowania {{$wpisy[$i][6]}}
+        </div>
     </div>
     <div class="col-md-2 col-xs-2">
+        <div class="tlo">
         pobudzenia {{$wpisy[$i][8]}}
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-8 col-xs-8">
-        <div class="nastroj {{$wpisy[$i][12]}}" style="width: {{$wpisy[$i][11]}}%;"}>&nbsp;</div>
+        
+        <div class="nastroj {{$wpisy[$i][12]}}" style="width: {{$wpisy[$i][14]}}%;"}>&nbsp;</div>
+        
     </div>
     
+</div>
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+    <div class="col-md-2 col-xs-2">
+        @if ($wpisy[$i][9] == true)
+        <button  class="btn btn-primary" onclick=pokaz_leki('{{  url('/ajax/pokaz_leki') }}',{{$wpisy[$i][3]}},{{$i}}) type="button">pokaż leki</button>
+        @else
+        <button  class="btn btn-danger" onclick=pokaz_leki('{{  url('/ajax/pokaz_leki') }}',{{$wpisy[$i][3]}},{{$i}}) type="button" disabled>Nie było leków</button>
+        @endif
+    </div>
+    <div class="col-md-2 col-xs-2">
+        @if ($wpisy[$i][13] == true)
+        <button  class="btn btn-primary" type="button" onclick=pokaz_opis('{{  url('/ajax/pokaz_opis') }}',{{$wpisy[$i][3]}},{{$i}})>pokaż co robiłem</button>
+        @else
+        <button  class="btn btn-danger" type="button" disabled>Nie nie robiłeś</button>        
+        @endif
+    </div>
+    <div class="col-md-2 col-xs-2">
+        <div class="tlo">
+         {{$wpisy[$i][4]}}
+         </div>
+    </div>
+    <div class="col-md-2 col-xs-2">
+        
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+    <div class="col-md-8 col-xs-8">
+        <div id=pokaz_leki_{{$i}}>
+        
+        </div>
+        <div id=pokaz_opis_{{$i}}>
+        
+        </div>
+    </div>
 </div>
 @endif
 <br>

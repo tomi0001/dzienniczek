@@ -86,17 +86,32 @@ class Controller_dodawanie extends BaseController
             $i++;           
         }
         //ustawia datę czyli z 2018 i 01 i 01 robi 2018-01-01
-        $data11 = $data3->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
+        if ($rok_a == "" and $miesiac_a == "" and $dzien_a == "" and $godzina_a > $godzina_b) {
+            $data11 = $data3->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,true,false);
+        }
+       else {
+            $data11 = $data3->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false,false);
+        }
+        
         //print $godzina_a;
-        $data22 = $data3->ustaw_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
+        $data22 = $data3->ustaw_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b,false,true);
         //print $data22;
+        //print "<font color=red>" . $data3->data2 . "</font>";
         //sprawdza czy dwie daty są mniejsze od sibie i dokładnie uzupełnione 
-        $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
-        $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
+        $ostatnia_godzina = $this->sprawdz_czy_dany_nastroj_sen_nie_nanosi_sie_na_poprzedni_nastroj($data11,$data22);
+            $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false);
+            $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b,true,false);
+        print "<font color=red>" . $data3->data1 . " " . $data3->data2 . "</font>";
+        //else {
+          //  $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
+            //$wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
+        //}
+        
         //sprawdza czy pierwsza data jest większa od drugiej
         $wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b);
+        //$wynik3 = 0;
         //sprawdza czy leki są dokładnie uzupełnione i też sprawdza poprawność daty lekow
-        $wynik4 = $this->sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta);
+        $wynik4 = $this->sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$data3->data1,$data3->data2);
         //sprawdza czy dawke jest liczbą
         $wynik5 = $this->sprawdz_dawke_leku($leki2);
         
@@ -106,6 +121,12 @@ class Controller_dodawanie extends BaseController
         //print $wynik5;
         $data1 = $rok_a . "-" . $miesiac_a . "-" . $dzien_a . " " . $godzina_a . ":" . $minuta_a . ":00";
         $data2 = $rok_b . "-" . $miesiac_b . "-" . $dzien_b . " " . $godzina_b . ":" . $minuta_b . ":00";
+        if ($ostatnia_godzina == false) {
+        
+            $bool=true;
+            $bledy[$i] = "Dane któregos nastroju pokładają się z datą poprzedniego nastroju";
+            $i++;  
+        }
         if ($wynik == -1) {
             $bool=true;
             $bledy[$i] = "Błędy format daty 1";
@@ -130,6 +151,12 @@ class Controller_dodawanie extends BaseController
             $bool=true;
             $bledy[$i] = "Nie poprawna data  w jakimś leku";
             $i++;            
+        }
+        if ($wynik4 == -6) {
+             $bool=true;
+            $bledy[$i] = "Jakiś lek nie jest w podanym przedziale czasowym";
+            
+            $i++;         
         }
         if ($wynik == -2 or $wynik == -4) {
             $bool=true;
@@ -171,8 +198,14 @@ class Controller_dodawanie extends BaseController
             $bledy[$i] = "Podana data 1 jest większa od  daty 2";
             $i++;            
         }
+        if ($wynik3 == -5) {
+            $bool = true;
+            $bledy[$i] = "Przedział czasowy musi sie mieścić w granicach 14 godzin";
+            $i++;  
+        }
         if ($bool == true) {
-            print "dobrze";
+        //var_dump($bledy);
+           // print "dobrze";
             //return Redirect::to('glowna')->with('bledy','fffff');
             return back()->withInput()->withErrors($bledy);
             //return Redirect::to('glowna')->with('bledy',$bledy);
@@ -183,7 +216,6 @@ class Controller_dodawanie extends BaseController
            $nastroj_dnia = $this->oblicz_sume_nastrojow_dla_danego_przedzialu($data11,$data22,$nastroj);
            $id_dnia = $this->zapisz_poziom_nastroju_dla_danego_dnia($data11,$nastroj_dnia);
            //$id_dnia = 3;
-           
            $id = $this->dodaj_nowy_nastroj($data11,$data22,$nastroj,$lek,$zdenerowanie,$co_robilem,$psychotyczne,$pobudzenie,$id_dnia);
            
            //print $nastroj_dnia;
@@ -221,21 +253,37 @@ class Controller_dodawanie extends BaseController
     private function zapisz_poziom_nastroju_dla_danego_dnia($data11,$nastroj_dnia) {
         $id_user = Auth::User()->id;
         $data = explode(" ",$data11);
-        $dni_nastrojow = DB::select("select nastroj,data from dni_nastrojow where id_dnia = '$id_user' and data = '$data[0]' ");
+        $dni_nastrojow = DB::select("select nastroj,data,liczba_sekund from dni_nastrojow where id_dnia = '$id_user' and data = '$data[0]' ");
         foreach ($dni_nastrojow as $dni_nastrojow2) {}
         
         if (empty($dni_nastrojow2->data) ) {
-            DB::insert("insert into dni_nastrojow(nastroj,data,id_dnia) values('$nastroj_dnia','" . $data[0] . "','$id_user')");
+            DB::insert("insert into dni_nastrojow(nastroj,data,id_dnia) values('$nastroj_dnia[0]','" . $data[0] . "','$id_user')");
         }
         else {
+            
             DB::table('dni_nastrojow')
             ->where('id_dnia', $id_user)->where('data',$data[0])
-            ->update(['nastroj' => $nastroj_dnia + $dni_nastrojow2->nastroj]);
+            ->update(['nastroj' => $nastroj_dnia[0] + $dni_nastrojow2->nastroj],['liczba_sekund'=> $nastroj_dnia[1] + $dni_nastrojow2->liczba_sekund]);
         }
         $jakie_id = DB::select("select id from dni_nastrojow where id_dnia = '$id_user' order by id desc limit 1 ");
         foreach ($jakie_id as $jakie_id2) {}
         
         return $jakie_id2->id;
+    }
+    private function sprawdz_czy_dany_nastroj_sen_nie_nanosi_sie_na_poprzedni_nastroj($data_nastroju,$data_nastroju2) {
+        //$nastroje = array();
+        $id_users = Auth::User()->id;
+        $data_nastroju3 = DB::select(" select godzina_zakonczenia from nastroj where godzina_zakonczenia < '$data_nastroju2' and godzina_zakonczenia > '$data_nastroju' and id_users = '$id_users' order by godzina_zaczecia DESC limit 1 ");
+        foreach ($data_nastroju3 as $data_nastroju4) {
+            
+        }
+        //var_dump($data_nastroju2);
+        $data_snu2 = DB::select("  select data_zakonczenia from sen where data_zakonczenia < '$data_nastroju2' and data_zakonczenia < '$data_nastroju'  and id_users = '$id_users' order by data_rozpoczecia DESC limit 1 ");
+        foreach ($data_snu2 as $data_snu3) {
+        
+        }
+        if (empty($data_nastroju4->godzina_zakonczenia) or empty($data_snu3->data_zakonczenia) ) return true;
+        else return false;
     }
     private function oblicz_sume_nastrojow_dla_danego_przedzialu($godzina_zaczecia,$godzina_zakonczenia,$poziom) {
         //for ($i=0;$i < count($typ_danych);$i++) {
@@ -243,16 +291,17 @@ class Controller_dodawanie extends BaseController
         $wynik  = strtotime($godzina_zaczecia);
         $wynik2 = strtotime($godzina_zakonczenia);
         $wynik3 = $wynik2 - $wynik;
-        if($poziom > 0) {
+        //if($poziom > 0) {
             $wynik4 = ($wynik3 * $poziom);
-        }
-        else {
+            
+        //}
+        //else {
           //  print "gowno";
-            $wynik4 = ($wynik3 * $poziom);
-        }
+          //  $wynik4 = ($wynik3 * $poziom);
+        //}
         //print "<font color=green> $wynik4 </font>";
         //print $wynik3 . "<br>"  .  $wynik4 .  "<Br>";
-        return $wynik4;
+        return array($wynik4,$wynik3);
         //}
         //36000
         
@@ -324,13 +373,20 @@ class Controller_dodawanie extends BaseController
         return -1;
         
     }
-    private function sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta) {
+    private function sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$data1,$data2) {
         $data3 = new \App\Http\Controllers\data();
+        print "<font color=green>asdd</font>";
         for ($i=0;$i < count($leki_rok);$i++) {
+                //print $leki_rok[$i];
             //if ($leki[$i] == "" and $leki2[$i] == "") return 1;
             if ($leki[$i] == "" xor $leki2[$i] == "" ) return -5;
-            $wynik[$i] = $data3->sprawdz_date($leki_rok[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina[$i],$leki_minuta[$i]);
-            if ($wynik[$i] == -1 or $wynik[$i] == -2 or $wynik[$i] == -3 or $wynik[$i] == -4) return $wynik[$i];
+            else if ($leki[$i] != "" or $leki2[$i] != "") {
+                $wynik[$i] = $data3->sprawdz_date($leki_rok[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina[$i],$leki_minuta[$i]);
+                $wynik2[$i] = $data3->sprawdz_czy_dany_lek_jest_w_danym_przedziale_czasowym($leki_rok[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina[$i],$leki_minuta[$i],$data1,$data2);
+                print "<font color=green>$wynik2[$i]</font>";
+                if ($wynik[$i] == -1 or $wynik[$i] == -2 or $wynik[$i] == -3 or $wynik[$i] == -4) return $wynik[$i];
+                else if ($wynik2[$i] == -6) return -6;
+            }
         }
         return 0;
        
