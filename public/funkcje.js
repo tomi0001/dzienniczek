@@ -62,7 +62,22 @@ function usun_lek(adres,i,id) {
  
 }
 var status = 12;
-
+function wstaw_ta_date(rok,miesiac,dzien) {
+   // alert(rok);
+    var rok2 = "<option value=></option><option value=" + rok +  " selected> " + rok + "</option>";
+    $('#rok_a').html(rok2);
+    var miesiac2 = "<option value=></option><option value=" + miesiac +  " selected> " + miesiac + "</option>";
+    $('#miesiac_a').html(miesiac2);
+    var dzien2 = "<option value=></option><option value=" + dzien +  " selected> " + dzien + "</option>";
+    $('#dzien_a').html(dzien2);
+    
+    $('#rok_b').html(rok2);
+    $('#miesiac_b').html(miesiac2);
+    $('#dzien_b').html(dzien2);
+    //var f = document.getElementsByName("rok_a");
+    //alert(f);
+    
+}
 function pokaz_opis(adres,id,i) {
   //alert(i);
     //$('#pokaz_leki_' + i).css('visibility', 'visible');
@@ -120,11 +135,63 @@ function ukryj_nastroje(ilosc) {
     
  for (i=0;i < ilosc;i++) {
      $('#pokaz_leki_' + i).hide();
+     $('#dodaj_lek_'+i).hide();
+     $('#edytuj_opis_'+i).hide();
      //alert(i);
  }
     
 }
+function dodaj_lek2(i) {
+    //alert(i);
+ var wynik = $('#dodaj_lek_'+i).is( ':visible');
+ if (wynik == true) $('#dodaj_lek_'+i).hide(120);   
+ else $('#dodaj_lek_'+i).show(120);   
+    
+}
 
+
+function dodaj_lek3(url,i,id) {
+    //alert(id);
+    var nazwa = $('#nazwa_'+i).val();
+    var dawka = $('#dawka_'+i).val();
+    var rok = $('#rok_'+i).val();
+    var godzina = $('#godzina_'+i).val();
+    var rodzaj = $('#rodzaj_'+i).val();
+    //alert(dawka);
+    $('#pokaz_pozycje_wyslania_leku_'+i).load(url+"?nazwa="+nazwa+"&dawka="+dawka+"&rok="+rok+"&godzina="+godzina+"&rodzaj="+rodzaj+"&id="+id);
+    
+}
+
+function edytuj_opis(i,url,id) {
+    
+    
+    $("#edytuj_opis_"+i).toggle(120);
+    var d = $("#edit_opis_"+i).load(url+ "?id="+id);
+    //alert(url);
+}
+
+function dodaj_opis(url,i,id) {
+    var text = $("#edit_opis_"+i).val();
+    //alert(text);
+   $("#dodaj_opis_"+i).load(url+"?id="+id+"&text="+text);
+    
+}
+function usun_nastroj(url,i,id) {
+    //var wynik = $("#nastro").load(url + "?id="+id);
+    var bool = confirm("Czy na pewno usunąć");
+    if (bool == true) {
+    $.ajax({
+  url: url + "?id="+id,
+}).done((msg) => {
+  let wiadomosc = msg;
+    $(".nastroj2_"+i).hide(50);
+    $("#nastroj_"+i).html("<div class=row>"  +  wiadomosc +  "</div>");
+    $("#nastroj_"+i).animate({height: "20px",opacity: 0}, 1500)
+});
+
+    }
+    
+}
 /*
  * 
 function zapisz_nastroj(adres) {

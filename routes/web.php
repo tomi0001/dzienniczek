@@ -30,6 +30,12 @@ Route::get('/ajax/dodaj_nastroj','Controller_dodawanie@dodaj_wpis2');
 Route::get('/ajax/pokaz_leki','Controller_ajax@pokaz_leki');
 Route::get('/ajax/pokaz_opis','Controller_ajax@pokaz_opis');
 Route::get('/ajax/usun_lek','Controller_ajax@usun_lek');
+Route::get('/ajax/dodaj_lek','Controller_ajax@dodaj_lek');
+Route::get('/ajax/edytuj_opis','Controller_ajax@edytuj_opis');
+Route::get('/ajax/dodaj_opis','Controller_ajax@dodaj_opis');
+Route::get('/ajax/usun_nastroj','Controller_ajax@usun_nastroj');
+Route::get('wyszukaj','Controller_szukaj@szukaj');
+Route::post('wyszukaj2','Controller_szukaj@szukaj2');
 Route::post('dodaj_wpis','Controller_dodawanie@dodaj_wpis');
 Route::post('dodaj_sen','Controller_dodawanie2@dodaj_sen');
 

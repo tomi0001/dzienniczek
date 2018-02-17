@@ -5,23 +5,24 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use DB;
+use Auth;
 class data extends BaseController
 {
 
     public $data1;
     public $data2;
    public function ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,$status = false,$status2 = false) {
-        print $godzina_a;
+        //print $godzina_a;
             if ($status == true) {
-                print "bardzo xle";
+                //print "bardzo xle";
                 $data11 = date("Y-m-d");
                 $data2 = strtotime($data11) - 84600;
                 $data1 = date("Y-m-d",$data2) .  " " . $godzina_a . ":" . $minuta_a . ":00";
             }
             elseif ($rok_a == "" and $miesiac_a == "" and $dzien_a == "") {
              $data1 = date("Y-m-d") .  " " . $godzina_a . ":" . $minuta_a . ":00";
-             print "zle";
+          //   print "zle";
             }
             else {
                 $data1 = $rok_a . "-" . $miesiac_a . "-" .  $dzien_a  . " " . $godzina_a . ":" . $minuta_a . ":00";
@@ -39,7 +40,64 @@ class data extends BaseController
             
             return $data1;
         }
-        
+            public function rysuj_dla_godziny($godzina,$status) {
+        if ($status == 1) {
+            $aktualna_godzina = $godzina- 1;
+            if ($aktualna_godzina < 0) {
+                $aktualna_godzina = 23;
+            }
+        }
+        else if ($status == 2) {
+            $aktualna_godzina = $godzina- 8;
+//            $dzien = date("Y-m-d");
+                if ($aktualna_godzina < 0) {
+                    $aktualna_godzina = 24 + $aktualna_godzina;
+                }
+  //          $dzien2 = strtotime($dzien);
+        }
+        else if ($status == 3) {
+            $aktualna_godzina = $godzina;
+            //print $godzina;
+        }
+        else {
+            $aktualna_godzina = $godzina;
+        }
+        /*
+        $tablica = 0;
+        for ($i=0;$i < 24;$i++) {
+            if ($aktualna_godzina == $i) {
+                $tablica = $i;
+            }
+            else {
+                $tablica = $i;
+            }
+        }
+        */
+        if ( strlen($aktualna_godzina) == 1) $aktualna_godzina = "0" . $aktualna_godzina;
+        return $aktualna_godzina;
+    }
+    
+        public function rysuj_dla_minuty($sprawdz = "") {
+        if ($sprawdz != "") {
+            $aktualna_minuta = $sprawdz;
+        }
+        else {
+            $aktualna_minuta = date("i");
+        }
+        /*
+        $tablica = 0;
+        for ($i=0;$i < 60;$i++) {
+            if ($aktualna_minuta == $i) {
+                $tablica = $i;
+            }
+            else {
+                $tablica = $i;
+            }
+        }
+        */
+        return $aktualna_minuta;
+    }
+    
     public function porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b,$bool) {
         //jeżeli bool jest true to znaczy, że 
         $wynik = $godzina_b - $godzina_a;
@@ -55,6 +113,27 @@ class data extends BaseController
         return 0;
     
     }
+    
+        public function rok_zaczecia($id_user)  {
+        $tablica = array();
+        $najmlodszy_rok = DB::select("select data_dodania from dziennik where id_users = '$id_user' order by data_dodania limit 1");
+        foreach ($najmlodszy_rok as $najmlodszy_rok2) {
+            
+        }
+        if (empty($najmlodszy_rok2->data_dodania) ) $data_dodania = date("Y");
+        else $data_dodania = $najmlodszy_rok2->data_dodania;
+        $i = $data_dodania;
+        $j = 0;
+        while ($i <= date("Y")) {
+            $tablica[$j] = $i;
+            $i++;
+            $j++;
+        }
+        
+        return $tablica;
+    }
+    
+    
     public function oblicz_jaki_jest_dzien($godzina_a,$godzina_b) {
         $wynik = explode(" ",$godzina_a);
         $wynik2 = explode("-",$wynik[0]);
@@ -149,6 +228,25 @@ class data extends BaseController
         //else if (
         //print var_dump(Input::get('dzien_a'));
     }
+    
+        public function dodaj_pojedynczy_lek($leki,$leki2,$leki3,$data) {
+        $id_users = Auth::User()->id;
+        //$data = $leki_rok . "-" . $leki_miesiac . "-" . $leki_dzien . " " . $leki_godzina . ":" . $leki_minuta . ":00";
+        //print $data;
+        DB::insert("insert into leki  (nazwa,data_spozycia,id_users,dawka,porcja) values('$leki','$data','$id_users','$leki2','$leki3')");
+        $id_ostatniego_leku = DB::select("select id from leki where id_users = '$id_users' order by id DESC limit 1");
+        foreach ($id_ostatniego_leku as $id_ostatniego_leku2) {
+            
+        }
+        return $id_ostatniego_leku2->id;
+        //print "<font color=red>$a</font>";
+        
+    }
+    
+        public function dodaj_przekierowanie_leku($id_leku,$id_nastroju) {
+        DB::insert("insert into przekierowanie_lekow  (id_leku,id_nastroj) values('$id_leku','$id_nastroju')");
+    }
+    
      public function oblicz_ilosc_minut_i_godzin2($data1,$data2) {
         //$wynik  = explode(" ",$data);
         //$wynik2 = explode(":",$wynik[1]);
@@ -157,7 +255,7 @@ class data extends BaseController
         $wynik = strtotime($data2) - strtotime($data1);
         //$godziny = 0;
         //$minuty = 0;
-        print $wynik . "<br>";
+        //print $wynik . "<br>";
         if ($wynik < 3600) $wynik4 = "Minut " . (int)($wynik / 60);
         //else if($wynik
         else {
@@ -166,7 +264,7 @@ class data extends BaseController
             $wynik5 =  $wynik2 - (int) $wynik2;
             //print "<font color=red>" . $wynik2 . "</font><br>";
             if (($wynik5) == 0) {
-                print "kupka";
+                //print "kupka";
                 //$wynik3 = $wynik2 / 60;
                 $wynik4 = "Godzin " . $wynik2;
                

@@ -1,7 +1,9 @@
 <body onload="ukryj_nastroje({{$ilosc_nastrojow}})">
-{{$wynik2[0][0]}}
+@section('title', 'Strona główna')
+
 @for ($i=0;$i < count($wpisy);$i++)
-<div class="row">
+
+<div class="row nastroj2_{{$i}}" >
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-3 col-xs-3">
         <div class="tlo">
@@ -36,6 +38,7 @@
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-4 col-xs-4">
          Łączny czas snu {{$wpisy[$i][4]}}
+         {{$wpisy[$i][0]}}
     </div>
     <div class="col-md-2 col-xs-2">
         
@@ -43,6 +46,7 @@
 </div>
 
 @else
+<div id=nastroj_{{$i}}>
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-2 col-xs-2">
@@ -75,14 +79,37 @@
     </div>
     
 </div>
-<div class="row">
+</div>
+<div class="row nastroj2_{{$i}}" >
     <div class="col-md-2 col-xs-2"></div>
-    <div class="col-md-2 col-xs-2">
+    <div class="col-md-5 col-xs-5">
+        <div class="row">
+        <div class="col-md-3 col-xs-3">
         @if ($wpisy[$i][9] == true)
         <button  class="btn btn-primary" onclick=pokaz_leki('{{  url('/ajax/pokaz_leki') }}',{{$wpisy[$i][3]}},{{$i}}) type="button">pokaż leki</button>
         @else
         <button  class="btn btn-danger" onclick=pokaz_leki('{{  url('/ajax/pokaz_leki') }}',{{$wpisy[$i][3]}},{{$i}}) type="button" disabled>Nie było leków</button>
         @endif
+        </div>
+        <div class="col-md-3 col-xs-3">
+       
+        <button  class="btn btn-primary" onclick=dodaj_lek2('{{$i}}') type="button">Dodaj leki</button>
+
+     
+        </div>
+        <div class="col-md-3 col-xs-3">
+       
+        <button  class="btn btn-danger" onclick=usun_nastroj('{{ url('/ajax/usun_nastroj')}}','{{$i}}','{{$wpisy[$i][3]}}') type="button">Usuń nastrój</button>
+
+     
+        </div>
+        <div class="col-md-3 col-xs-3">
+       
+        <button  class="btn btn-primary" onclick=edytuj_opis({{$i}},'{{ url('/ajax/edytuj_opis') }}',{{$wpisy[$i][3]}}) type="button">Edytuj dodaj opis</button>
+
+     
+        </div>
+        </div>
     </div>
     <div class="col-md-2 col-xs-2">
         @if ($wpisy[$i][13] == true)
@@ -109,6 +136,56 @@
         <div id=pokaz_opis_{{$i}}>
         
         </div>
+        <div id=edytuj_opis_{{$i}}>
+            <div class="row">
+            <div class="col-md-3 col-xs-3">
+            </div>
+            
+            <div class="col-md-5 col-xs-5">
+            <textarea id="edit_opis_{{$i}}" class="form-control" rows="3" cols="20" ></textarea>
+             <div align=center><button  class="btn btn-primary" onclick=dodaj_opis('{{url('/ajax/dodaj_opis')}}','{{$i}}','{{$wpisy[$i][3]}}') type="button">Zapisz</button></div>
+            </div>
+            <div class="col-md-4 col-xs-4">
+                <div id=dodaj_opis_{{$i}}></div>
+            </div>
+            </div>
+        </div>
+        <div id=dodaj_lek_{{$i}}>
+        <form>
+        <div class="row">
+
+        <div class="col-md-2 col-xs-2">
+        <input type=text id=nazwa_{{$i}} class=form-control placeholder="nazwa">
+        </div>
+        <div class="col-md-2 col-xs-2">
+        <input type=text id=dawka_{{$i}} class=form-control placeholder="dawka">
+        </div>
+        <div class="col-md-3 col-xs-3">
+        <input type=date id=rok_{{$i}} class=form-control>
+        </div>
+        <div class="col-md-3 col-xs-3">
+        <input type=time id=godzina_{{$i}} class=form-control>
+        </div>
+        <div class="col-md-2 col-xs-2">
+        <select id=rodzaj_{{$i}} class="form-control">        <option value="1">Mg</option>
+        <option value="2">ile litrow</option>
+        <option value="3">ile sztuk</option></select>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-md-4 col-xs-4">
+        
+        
+        </div>
+        <div class="col-md-2 col-xs-2">
+        
+        <button  class="btn btn-primary" onclick=dodaj_lek3('{{url('/ajax/dodaj_lek')}}','{{$i}}','{{$wpisy[$i][3]}}') type="button">Dodaj lek</button>
+        </div>
+        
+        </div>
+        </form>
+        <div align=center><div id=pokaz_pozycje_wyslania_leku_{{$i}}></div></div>
+        </div>
     </div>
 </div>
 @endif
@@ -119,19 +196,21 @@
 <div class="row">
   <form action={{ url('dodaj_wpis') }} method=post>
   <div class="col-md-1 col-xs-1"></div>
-  <div class="col-md-3 col-xs-3"><span class="normalna2">Godziny zaczęcia</span></div>
+  <div class="col-md-3 col-xs-3"><span class="normalna2">Godziny zaczęcia</span> <button  class="btn btn-primary" onclick=wstaw_ta_date({{$rok}},{{$miesiac}},{{$dzien}}) type="button">Wataw datę</button></div>
   <div class="col-md-4 col-xs-4">
     <div class="row">
-        <div class="col-md-4 col-xs-4">
-            <select name="rok_a" class=form-control  value={{Input::old('rok_a')}}>
-            <option value=""></option>
+        <div class="col-md-5 col-xs-5">
+        
+            <input type=date name=rok_a class=form-control value={{Input::old('rok_a')}}>
+            <select name="rok_aa" class=form-control id="rok_a" value={{Input::old('rok_a')}}>
+            <option value="{{Input::old('rok_a')}}" selected>{{Input::old('rok_a')}}</option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
             @endfor
             </select>
             </div>
               <div class="col-md-4 col-xs-4">
-            <select name="miesiac_a" class=form-control>
+            <select name="miesiac_a" id = "miesiac_a" class=form-control>
             <option value=""></option>
             @for ($i=0;$i <= 12;$i++)
                 <option value={{$i}}>{{$i}}</option>
@@ -140,7 +219,7 @@
             
             </div>
             <div class="col-md-4 col-xs-4">
-            <select name="dzien_a" class=form-control>
+            <select name="dzien_a"  id = "dzien_a" class=form-control>
             <option value=""></option>
             @for ($i=0;$i <= 31;$i++)
                 <option value={{$i}}>{{$i}}</option>
@@ -153,7 +232,13 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
      <div class="col-md-5 col-xs-5">
-        <select name="godzina_a" class=form-control>
+     @if (empty(Input::old('godzina_a')))
+     <input type=time name=godzina_a class=form-control value={{$tablica_godzin2}}>
+     @else
+     <input type=time name=godzina_a class=form-control value={{Input::old('godzina_a')}}>
+     @endif
+        <select name="godzina_aa" class=form-control>
+        
   @for($i=0;$i< count($tablica_godzin2);$i++)
     
     <option value {{$tablica_godzin2[$i]}}>{{$i}}</option>
@@ -177,8 +262,9 @@
   <div class="col-md-3 col-xs-3"><span class="normalna2">Godzina skończenia</span></div>
     <div class="col-md-4 col-xs-4">
     <div class="row">
-        <div class="col-md-4 col-xs-4">
-            <select name="rok_b" class=form-control>
+        <div class="col-md-5 col-xs-5">
+        <input type=date name=rok_b class=form-control value={{Input::old('rok_b')}}>
+            <select name="rok_bb"  id="rok_b" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -186,7 +272,7 @@
             </select>
             </div>
               <div class="col-md-4 col-xs-4">
-            <select name="miesiac_b" class=form-control>
+            <select name="miesiac_b" id="miesiac_b" class=form-control>
             <option value=""></option>
             @for ($i=0;$i <= 12;$i++)
                 <option value={{$i}}>{{$i}}</option>
@@ -195,7 +281,7 @@
             
             </div>
             <div class="col-md-4 col-xs-4">
-            <select name="dzien_b" class=form-control>
+            <select name="dzien_b" id="dzien_b" class=form-control>
             <option value=""></option>
             @for ($i=0;$i <= 31;$i++)
                 <option value={{$i}}>{{$i}}</option>
@@ -208,7 +294,13 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
      <div class="col-md-5 col-xs-5">
-  <select name="godzina_b" class=form-control>
+     @if (empty(Input::old('godzina_a')))
+     <input type=time name=godzina_b class=form-control value={{$tablica_godzin3}}>
+     @else
+     <input type=time name=godzina_b class=form-control value={{Input::old('godzina_b')}}>
+     @endif
+     
+  <select name="godzina_bb" class=form-control>
   @for($i=0;$i< count($tablica_godzin3);$i++)
     
     <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
@@ -275,10 +367,10 @@
     <div class="col-md-1 col-xs-1"></div>
     <div class="col-md-3 col-xs-3"><span class="normalna2">Jakie leki spożywałem</span></div>
     <div class="col-md-2 col-xs-2">
-        <input type=text  id=leki[]  name=leki[] class=form-control placeholder="nazwa" value={{Input::old('leki[]')}}>
+        <input type=text  id=leki[]  name=leki[] class=form-control placeholder="nazwa" value={{Input::old('leki')[0]}}>
     </div>
     <div class="col-md-2 col-xs-2">
-        <input type=text name=leki2[] class=form-control placeholder="dawka">
+        <input type=text name=leki2[] class=form-control placeholder="dawka" value={{Input::old('leki2')[0]}}>
     </div>
     <div class="col-md-2 col-xs-2">
         <select name=leki3[]  class=form-control>
@@ -296,7 +388,8 @@
     <div class="col-md-4 col-xs-4">
       <div class="row">
         <div class="col-md-4 col-xs-4">
-            <select name="leki_rok[]" class=form-control>
+        <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[0]}}>
+            <select name="leki_rok2[]" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -326,7 +419,13 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
         <div class="col-md-5 col-xs-5">
-            <select name="leki_godzina[]" class=form-control>
+         @if (empty(Input::old('leki_godzina')[0]))
+         <input type=time name=leki_godzina[] class=form-control  value={{$tablica_godzin3}}>
+         @else
+         <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[0]}}>
+         @endif
+        
+            <select name="leki_godzina2[]" class=form-control>
             @for($i=0;$i< count($tablica_godzin3);$i++)
     
                 <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
@@ -351,10 +450,10 @@
     <div class="col-md-1 col-xs-1"></div>
     <div class="col-md-3 col-xs-3"></div>
     <div class="col-md-2 col-xs-2">
-        <input type=text id=leki[] name=leki[] class=form-control placeholder="nazwa">
+        <input type=text id=leki[] name=leki[] class=form-control placeholder="nazwa" value={{Input::old('leki')[1]}}>
     </div>
     <div class="col-md-2 col-xs-2">
-        <input type=text name=leki2[] class=form-control placeholder="dawka">
+        <input type=text name=leki2[] class=form-control placeholder="dawka" value={{Input::old('leki2')[1]}}>
     </div>
     <div class="col-md-2 col-xs-2">
         <select name=leki3[]  class=form-control>
@@ -370,7 +469,8 @@
     <div class="col-md-4 col-xs-4">
       <div class="row">
         <div class="col-md-4 col-xs-4">
-            <select name="leki_rok[]" class=form-control>
+        <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[1]}}>
+            <select name="leki_rok2[]" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -400,7 +500,12 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
         <div class="col-md-5 col-xs-5">
-            <select name="leki_godzina[]" class=form-control>
+         @if (empty(Input::old('leki_godzina')[1]))
+         <input type=time name=leki_godzina[] class=form-control  value={{$tablica_godzin3}}>
+         @else
+         <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[1]}}>
+         @endif
+            <select name="leki_godzina2[]" class=form-control>
             @for($i=0;$i< count($tablica_godzin3);$i++)
     
                 <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
@@ -426,10 +531,10 @@
     <div class="col-md-1 col-xs-1"></div>
     <div class="col-md-3 col-xs-3"></div>
     <div class="col-md-2 col-xs-2">
-        <input type=text name=leki[] class=form-control placeholder="nazwa">
+        <input type=text name=leki[] class=form-control placeholder="nazwa" value={{Input::old('leki')[2]}}>
     </div>
     <div class="col-md-2 col-xs-2">
-        <input type=text name=leki2[] class=form-control placeholder="dawka">
+        <input type=text name=leki2[] class=form-control placeholder="dawka" value={{Input::old('leki2')[2]}}>
     </div>
     <div class="col-md-2 col-xs-2">
         <select name=leki3[]  class=form-control>
@@ -447,7 +552,8 @@
     <div class="col-md-4 col-xs-4">
       <div class="row">
         <div class="col-md-4 col-xs-4">
-            <select name="leki_rok[]" class=form-control>
+        <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[2]}}>
+            <select name="leki_rok2[]" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -477,7 +583,12 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
         <div class="col-md-5 col-xs-5">
-            <select name="leki_godzina[]" class=form-control>
+         @if (empty(Input::old('leki_godzina')[2]))
+         <input type=time name=leki_godzina[] class=form-control  value={{$tablica_godzin3}}>
+         @else
+         <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[2]}}>
+         @endif
+            <select name="leki_godzina2[]" class=form-control>
             @for($i=0;$i< count($tablica_godzin3);$i++)
     
                 <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
@@ -500,10 +611,10 @@
     <div class="col-md-1 col-xs-1"></div>
     <div class="col-md-3 col-xs-3"></div>
     <div class="col-md-2 col-xs-2">
-        <input type=text name=leki[] class=form-control placeholder="nazwa">
+        <input type=text name=leki[] class=form-control placeholder="nazwa" value={{Input::old('leki')[3]}}>
     </div>
     <div class="col-md-2 col-xs-2">
-        <input type=text name=leki2[] class=form-control placeholder="dawka">
+        <input type=text name=leki2[] class=form-control placeholder="dawka" value={{Input::old('leki2')[3]}}>
     </div>
     <div class="col-md-2 col-xs-2">
         <select name=leki3[]  class=form-control>
@@ -520,7 +631,8 @@
     <div class="col-md-4 col-xs-4">
       <div class="row">
         <div class="col-md-4 col-xs-4">
-            <select name="leki_rok[]" class=form-control>
+        <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[3]}}>
+            <select name="leki_rok2[]" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -550,7 +662,12 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
         <div class="col-md-5 col-xs-5">
-            <select name="leki_godzina[]" class=form-control>
+         @if (empty(Input::old('leki_godzina')[3]))
+         <input type=time name=leki_godzina[] class=form-control  value={{$tablica_godzin3}}>
+         @else
+         <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[3]}}>
+         @endif
+            <select name="leki_godzina2[]" class=form-control>
             @for($i=0;$i< count($tablica_godzin3);$i++)
     
                 <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
@@ -620,7 +737,8 @@
   
       <div class="row">
         <div class="col-md-4 col-xs-4">
-            <select name="rok_a" class=form-control  value={{Input::old('rok_a')}}>
+        <input type=date name=rok_a class=form-control>
+            <select name="rok_aa" class=form-control  value={{Input::old('rok_a')}}>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -650,7 +768,9 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
      <div class="col-md-5 col-xs-5">
-        <select name="godzina_a" class=form-control>
+     
+     <input type=time name=godzina_a class=form-control value="{{$tablica_godzin4}}">
+        <select name="godzina_aa" class=form-control>
   @for($i=0;$i< count($tablica_godzin4);$i++)
     
     <option value {{$tablica_godzin4[$i]}}>{{$i}}</option>
@@ -675,7 +795,8 @@
     <div class="col-md-4 col-xs-4">
     <div class="row">
         <div class="col-md-4 col-xs-4">
-            <select name="rok_b" class=form-control>
+        <input type=date name=rok_b class=form-control>
+            <select name="rok_bb" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
                 <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
@@ -705,7 +826,8 @@
   <div class="col-md-3 col-xs-3">
      <div class="row">
      <div class="col-md-5 col-xs-5">
-  <select name="godzina_b" class=form-control>
+     <input type=time name=godzina_b class=form-control value={{$tablica_godzin3}}>
+  <select name="godzina_bb" class=form-control>
   @for($i=0;$i< count($tablica_godzin3);$i++)
     
     <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>

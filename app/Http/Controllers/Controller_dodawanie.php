@@ -32,24 +32,55 @@ class Controller_dodawanie extends BaseController
         $leki_minuta = array();
         //print Input::get('nastroj');
         $bledy = array();
-        $rok_a = Input::get('rok_a');
-        $rok_b = Input::get('rok_b');
-        $miesiac_a = Input::get('miesiac_a');
-        $miesiac_b = Input::get('miesiac_b');
-        $dzien_a = Input::get('dzien_a');
-        $dzien_b = Input::get('dzien_b');
-        $godzina_a = Input::get('godzina_a');
-        $godzina_b = Input::get('godzina_b');
-        $minuta_a = Input::get('minuta_a');
-        $minuta_b = Input::get('minuta_b');
+        
+        if ( strstr(Input::get('rok_b'),"-")) {
+            $rok_bb = explode("-",Input::get('rok_b'));
+            $rok_b = $rok_bb[0];
+            $miesiac_b = $rok_bb[1];
+            $dzien_b = $rok_bb[2];
+        }
+        else {
+            $rok_b = "";
+            $miesiac_b = "";
+            $dzien_b = "";
+        
+        }
+        if ( strstr(Input::get('rok_a'),"-")) {
+            $rok_aa = explode("-",Input::get('rok_a'));
+            $rok_a = $rok_aa[0];
+            $miesiac_a = $rok_aa[1];
+            $dzien_a = $rok_aa[2];
+        }
+        else {
+            $rok_a = "";
+            $miesiac_a = "";
+            $dzien_a = "";
+        
+        }
+
+        
+        $godzina_aa = explode(":",Input::get('godzina_a'));
+        $godzina_a = $godzina_aa[0];
+        $godzina_bb = explode(":",Input::get('godzina_b'));
+        $minuta_a = $godzina_aa[1];
+        $godzina_b = $godzina_bb[0];
+        $minuta_b = $godzina_bb[1];
+        $tablica_godzin2 = $data3->rysuj_dla_godziny($godzina_b,3);
+        
+        $tablica_godzin2 = $tablica_godzin2 . ":00:00";
+        print "<font color=green>" . $tablica_godzin2 . "</font>";
         $leki = Input::get("leki");
         $leki2 = Input::get("leki2");
+        //print $leki[0] . "<br>" . $leki2[0];
+        
         $leki3 = Input::get("leki3");
         $leki_rok = Input::get("leki_rok");
-        $leki_miesiac = Input::get("leki_miesiac");
-        $leki_dzien = Input::get("leki_dzien");
+        
+       // $leki_miesiac = Input::get("leki_miesiac");
+       // $leki_dzien = Input::get("leki_dzien");
         $leki_godzina = Input::get("leki_godzina");
-        $leki_minuta = Input::get("leki_minuta");
+      //  $leki_minuta = Input::get("leki_minuta");
+      print  "<font color=green><br>" .  var_dump($leki) . "<br>" . var_dump($leki2) . "</font>";
         $co_robilem = Input::get("co_robilem");
         $psychotyczne = Input::get("psychotyczne");
         //print $psychotyczne;
@@ -101,7 +132,7 @@ class Controller_dodawanie extends BaseController
         $ostatnia_godzina = $this->sprawdz_czy_dany_nastroj_sen_nie_nanosi_sie_na_poprzedni_nastroj($data11,$data22);
             $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false);
             $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b,true,false);
-        print "<font color=red>" . $data3->data1 . " " . $data3->data2 . "</font>";
+        print "<font color=red>" . $data11 . " " . $data22 . "</font>";
         //else {
           //  $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
             //$wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
@@ -111,7 +142,7 @@ class Controller_dodawanie extends BaseController
         $wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b);
         //$wynik3 = 0;
         //sprawdza czy leki są dokładnie uzupełnione i też sprawdza poprawność daty lekow
-        $wynik4 = $this->sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$data3->data1,$data3->data2);
+        $wynik4 = $this->sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_godzina,$data3->data1,$data3->data2);
         //sprawdza czy dawke jest liczbą
         $wynik5 = $this->sprawdz_dawke_leku($leki2);
         
@@ -207,7 +238,8 @@ class Controller_dodawanie extends BaseController
         //var_dump($bledy);
            // print "dobrze";
             //return Redirect::to('glowna')->with('bledy','fffff');
-            return back()->withInput()->withErrors($bledy);
+           return Redirect('glowna')->withInput()->withErrors($bledy);
+           //print Input::get('rok_a');
             //return Redirect::to('glowna')->with('bledy',$bledy);
         }
         else {
@@ -221,7 +253,7 @@ class Controller_dodawanie extends BaseController
            //print $nastroj_dnia;
            if ($wynik4 != 1) {
                //dodaje do bazy nowe leki
-            $this->dodaj_nowe_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$id);
+            $this->dodaj_nowe_leki($leki,$leki2,$leki3,$leki_rok,$leki_godzina,$id);
            }
            return back()->withInput()->with(true);
            //print response()->download(input::get('leki'));
@@ -232,19 +264,36 @@ class Controller_dodawanie extends BaseController
         //$wynik2 = $this->porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b);
         //print var_dump(Input::get('leki'));
     }
-    private function dodaj_nowe_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$id) {
+    private function dodaj_nowe_leki($leki,$leki2,$leki3,$leki_rok,$leki_godzina,$id) {
         $data3 = new \App\Http\Controllers\data();
         $daty_lekow = array();
         $wynik  = array();
         $id3 = array();
         for ($i=0;$i < count($leki_rok);$i++) {
             //print $leki_rok[$i];
-            $daty_lekow[$i] = $data3->ustaw_date($leki_rok[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina[$i],$leki_minuta[$i]);
+            if (strstr($leki_rok[$i],"-") ) {
+                $leki_tymcza = explode("-",$leki_rok[$i]);
+                $leki_rok2[$i] = $leki_tymcza[0];
+                $leki_miesiac[$i] = $leki_tymcza[1];
+                $leki_dzien[$i] = $leki_tymcza[2];
+            }
+            else {
+                $leki_rok2[$i] = "";
+                $leki_miesiac[$i] = "";
+                $leki_dzien[$i] = "";
+            }
+            if ( strstr($leki_godzina[$i],":") ) {
+                $leki_tymcza2 = explode(":",$leki_godzina[$i]);
+                $leki_godzina2[$i] = $leki_tymcza2[0];
+                $leki_minuta[$i] = $leki_tymcza2[1];
+                
+            }
+            $daty_lekow[$i] = $data3->ustaw_date($leki_rok2[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina2[$i],$leki_minuta[$i]);
             $wynik[$i] = $this->sprawdz_czy_dodawac_lek($leki[$i],$leki2[$i]);
             if ($wynik[$i] == -1) {
-                $id2 = $this->dodaj_pojedynczy_lek($leki[$i],$leki2[$i],$leki3[$i],$daty_lekow[$i]);
+                $id2 = $data3->dodaj_pojedynczy_lek($leki[$i],$leki2[$i],$leki3[$i],$daty_lekow[$i]);
                     $id3[$i] = $id;
-                    $this->dodaj_przekierowanie_leku($id2,$id);
+                    $data3->dodaj_przekierowanie_leku($id2,$id);
             }
         }
         //$this->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
@@ -273,16 +322,16 @@ class Controller_dodawanie extends BaseController
     private function sprawdz_czy_dany_nastroj_sen_nie_nanosi_sie_na_poprzedni_nastroj($data_nastroju,$data_nastroju2) {
         //$nastroje = array();
         $id_users = Auth::User()->id;
-        $data_nastroju3 = DB::select(" select godzina_zakonczenia from nastroj where godzina_zakonczenia < '$data_nastroju2' and godzina_zakonczenia > '$data_nastroju' and id_users = '$id_users' order by godzina_zaczecia DESC limit 1 ");
+        $data_nastroju3 = DB::select(" select godzina_zakonczenia from nastroj where (godzina_zakonczenia > '$data_nastroju' and godzina_zaczecia < '$data_nastroju2')  and id_users = '$id_users' order by godzina_zaczecia DESC limit 1 ");
         foreach ($data_nastroju3 as $data_nastroju4) {
             
         }
         //var_dump($data_nastroju2);
-        $data_snu2 = DB::select("  select data_zakonczenia from sen where data_zakonczenia < '$data_nastroju2' and data_zakonczenia < '$data_nastroju'  and id_users = '$id_users' order by data_rozpoczecia DESC limit 1 ");
+        $data_snu2 = DB::select("  select data_zakonczenia from sen where data_zakonczenia > '$data_nastroju' and data_rozpoczecia < '$data_nastroju2'  and id_users = '$id_users' order by data_rozpoczecia DESC limit 1 ");
         foreach ($data_snu2 as $data_snu3) {
         
         }
-        if (empty($data_nastroju4->godzina_zakonczenia) or empty($data_snu3->data_zakonczenia) ) return true;
+        if (empty($data_nastroju4->godzina_zakonczenia) and empty($data_snu3->data_zakonczenia) ) return true;
         else return false;
     }
     private function oblicz_sume_nastrojow_dla_danego_przedzialu($godzina_zaczecia,$godzina_zakonczenia,$poziom) {
@@ -307,22 +356,8 @@ class Controller_dodawanie extends BaseController
         
     }
     
-    private function dodaj_przekierowanie_leku($id_leku,$id_nastroju) {
-        DB::insert("insert into przekierowanie_lekow  (id_leku,id_nastroj) values('$id_leku','$id_nastroju')");
-    }
-    private function dodaj_pojedynczy_lek($leki,$leki2,$leki3,$data) {
-        $id_users = Auth::User()->id;
-        //$data = $leki_rok . "-" . $leki_miesiac . "-" . $leki_dzien . " " . $leki_godzina . ":" . $leki_minuta . ":00";
-        //print $data;
-        DB::insert("insert into leki  (nazwa,data_spozycia,id_users,dawka,porcja) values('$leki','$data','$id_users','$leki2','$leki3')");
-        $id_ostatniego_leku = DB::select("select id from leki where id_users = '$id_users' order by id DESC limit 1");
-        foreach ($id_ostatniego_leku as $id_ostatniego_leku2) {
-            
-        }
-        return $id_ostatniego_leku2->id;
-        //print "<font color=red>$a</font>";
-        
-    }
+
+
   
     private function sprawdz_dawke_leku($dawka) {
         $bool = false;
@@ -373,16 +408,34 @@ class Controller_dodawanie extends BaseController
         return -1;
         
     }
-    private function sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_miesiac,$leki_dzien,$leki_godzina,$leki_minuta,$data1,$data2) {
+    private function sprawdz_leki($leki,$leki2,$leki3,$leki_rok,$leki_godzina,$data1,$data2) {
         $data3 = new \App\Http\Controllers\data();
         print "<font color=green>asdd</font>";
         for ($i=0;$i < count($leki_rok);$i++) {
+            if (strstr($leki_rok[$i],"-") ) {
+                $leki_tymcza = explode("-",$leki_rok[$i]);
+                $leki_rok2[$i] = $leki_tymcza[0];
+                $leki_miesiac[$i] = $leki_tymcza[1];
+                $leki_dzien[$i] = $leki_tymcza[2];
+            }
+            else {
+                $leki_rok2[$i] = "";
+                $leki_miesiac[$i] = "";
+                $leki_dzien[$i] = "";
+            }
+            if ( strstr($leki_godzina[$i],":") ) {
+                $leki_tymcza2 = explode(":",$leki_godzina[$i]);
+                $leki_godzina2[$i] = $leki_tymcza2[0];
+                $leki_minuta[$i] = $leki_tymcza2[1];
+                
+            }
+            else return -7;
                 //print $leki_rok[$i];
             //if ($leki[$i] == "" and $leki2[$i] == "") return 1;
             if ($leki[$i] == "" xor $leki2[$i] == "" ) return -5;
             else if ($leki[$i] != "" or $leki2[$i] != "") {
-                $wynik[$i] = $data3->sprawdz_date($leki_rok[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina[$i],$leki_minuta[$i]);
-                $wynik2[$i] = $data3->sprawdz_czy_dany_lek_jest_w_danym_przedziale_czasowym($leki_rok[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina[$i],$leki_minuta[$i],$data1,$data2);
+                $wynik[$i] = $data3->sprawdz_date($leki_rok2[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina2[$i],$leki_minuta[$i]);
+                $wynik2[$i] = $data3->sprawdz_czy_dany_lek_jest_w_danym_przedziale_czasowym($leki_rok2[$i],$leki_miesiac[$i],$leki_dzien[$i],$leki_godzina2[$i],$leki_minuta[$i],$data1,$data2);
                 print "<font color=green>$wynik2[$i]</font>";
                 if ($wynik[$i] == -1 or $wynik[$i] == -2 or $wynik[$i] == -3 or $wynik[$i] == -4) return $wynik[$i];
                 else if ($wynik2[$i] == -6) return -6;

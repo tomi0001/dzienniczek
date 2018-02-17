@@ -19,16 +19,37 @@ class Controller_dodawanie2 extends BaseController
     public function dodaj_sen() {
         $data3 = new \App\Http\Controllers\data();
         $bool = false;
-        $rok_a = Input::get('rok_a');
-        $rok_b = Input::get('rok_b');
-        $miesiac_a = Input::get('miesiac_a');
-        $miesiac_b = Input::get('miesiac_b');
-        $dzien_a = Input::get('dzien_a');
-        $dzien_b = Input::get('dzien_b');
-        $godzina_a = Input::get('godzina_a');
-        $godzina_b = Input::get('godzina_b');
-        $minuta_a = Input::get('minuta_a');
-        $minuta_b = Input::get('minuta_b');
+        if ( strstr(Input::get('rok_b'),"-")) {
+            $rok_bb = explode("-",Input::get('rok_b'));
+            $rok_b = $rok_bb[0];
+            $miesiac_b = $rok_bb[1];
+            $dzien_b = $rok_bb[2];
+        }
+        else {
+            $rok_b = "";
+            $miesiac_b = "";
+            $dzien_b = "";
+        
+        }
+        if ( strstr(Input::get('rok_a'),"-")) {
+            $rok_aa = explode("-",Input::get('rok_a'));
+            $rok_a = $rok_aa[0];
+            $miesiac_a = $rok_aa[1];
+            $dzien_a = $rok_aa[2];
+        }
+        else {
+            $rok_a = "";
+            $miesiac_a = "";
+            $dzien_a = "";
+        
+        }
+        $godzina_aa = explode(":",Input::get('godzina_a'));
+        $godzina_a = $godzina_aa[0];
+        $godzina_bb = explode(":",Input::get('godzina_b'));
+        $minuta_a = $godzina_aa[1];
+        $godzina_b = $godzina_bb[0];
+        $minuta_b = $godzina_bb[1];
+
         $wybudzenia = Input::get('wybudzenia');
         $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false);
         $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
