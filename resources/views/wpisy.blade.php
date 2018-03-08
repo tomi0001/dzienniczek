@@ -1,6 +1,50 @@
 <body onload="ukryj_nastroje({{$ilosc_nastrojow}})">
 @section('title', 'Strona główna')
-
+@if ($wynik2[0][0] != 23)
+<div class="row">
+    <div class="col-md-4 col-xs-4">
+    </div>
+    <div class="col-md-5 col-xs-5">
+        
+       <div class="nastroj {{$wynik2[0][1]}}" style="width: 100%;">Wartość nastroju dla tego dnia to {{$wynik2[0][0]}}</div>
+    
+</div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-xs-4">
+    </div>
+    <div class="col-md-5 col-xs-5">
+        
+       <div class="nastroj {{$wynik3[0][1]}}" style="width: 100%;">Wartość lęku dla tego dnia to {{$wynik3[0][0]}}
+        
+    </div>
+    
+</div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-xs-4">
+    </div>
+    <div class="col-md-5 col-xs-5">
+        
+       <div class="nastroj {{$wynik4[0][1]}}" style="width: 100%;">Wartość zdenerwowania dla tego dnia to {{$wynik4[0][0]}}
+        
+    </div>
+    
+</div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-xs-4">
+    </div>
+    <div class="col-md-5 col-xs-5">
+        
+       <div class="nastroj {{$wynik5[0][1]}}" style="width: 100%;">Wartość pobudzenia dla tego dnia to {{$wynik5[0][0]}}
+        
+    </div>
+    
+</div>
+</div>
+@endif
+<br><br>
 @for ($i=0;$i < count($wpisy);$i++)
 
 <div class="row nastroj2_{{$i}}" >
@@ -37,14 +81,27 @@
 <div class="row">
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-4 col-xs-4">
+        <div class="tlo">
          Łączny czas snu {{$wpisy[$i][4]}}
          {{$wpisy[$i][0]}}
+         </div>
     </div>
     <div class="col-md-2 col-xs-2">
-        
+        <div class="tlo">
+        ilość wybudzeń {{$wpisy[$i][1]}}
+        </div>
     </div>
 </div>
+<div class="row">
+     <div class="col-md-2 col-xs-2"></div>
+     <div class="col-md-3 col-xs-3">
+       
+        <button  class="btn btn-danger" onclick=usun_nastroj('{{ url('/ajax/usun_sen')}}','{{$i}}','{{$wpisy[$i][3]}}') type="button">Usuń nastrój</button>
 
+     
+        </div>
+        
+</div>
 @else
 <div id=nastroj_{{$i}}>
 <div class="row">
@@ -80,6 +137,19 @@
     
 </div>
 </div>
+@if ($wpisy[$i][7] != "")
+<div class="row">
+    <div class="col-md-2 col-xs-2"></div>
+    <div class="col-md-8 col-xs-8">
+        <div class=tlo3>
+      <span class=psycho>Ilość epizodow psychotycznych {{$wpisy[$i][7]}}</span>
+        </div>
+    </div>
+    
+</div>
+
+
+@endif
 <div class="row nastroj2_{{$i}}" >
     <div class="col-md-2 col-xs-2"></div>
     <div class="col-md-5 col-xs-5">
@@ -191,68 +261,47 @@
 @endif
 <br>
 @endfor
+<div class="row">
+<div class="col-md-5 col-xs-5">
 
+</div>
+<div class="col-md-4 col-xs-4">
+<span class=wieksza>Dodaj nowy nastrój</span>
+</div>
 
+</div>
+<br><br>
 <div class="row">
   <form action={{ url('dodaj_wpis') }} method=post>
   <div class="col-md-1 col-xs-1"></div>
-  <div class="col-md-3 col-xs-3"><span class="normalna2">Godziny zaczęcia</span> <button  class="btn btn-primary" onclick=wstaw_ta_date({{$rok}},{{$miesiac}},{{$dzien}}) type="button">Wataw datę</button></div>
+  <div class="col-md-3 col-xs-3"><span class="normalna2">Godziny zaczęcia</span> </div>
   <div class="col-md-4 col-xs-4">
     <div class="row">
         <div class="col-md-5 col-xs-5">
         
+            <span class=pouczenie>Dzień zaczęcia jeżeli tworzyłeś nastroj w tym samym dniu pozostaw to pole puste</span>
+            
+            </div>
+            <div class="col-md-5 col-xs-5">
+        
             <input type=date name=rok_a class=form-control value={{Input::old('rok_a')}}>
-            <select name="rok_aa" class=form-control id="rok_a" value={{Input::old('rok_a')}}>
-            <option value="{{Input::old('rok_a')}}" selected>{{Input::old('rok_a')}}</option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
-            </div>
-              <div class="col-md-4 col-xs-4">
-            <select name="miesiac_a" id = "miesiac_a" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
             
             </div>
-            <div class="col-md-4 col-xs-4">
-            <select name="dzien_a"  id = "dzien_a" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-            </div>
+  
   </div>
     </div>
   <div class="col-md-3 col-xs-3">
      <div class="row">
+     
      <div class="col-md-5 col-xs-5">
      @if (empty(Input::old('godzina_a')))
      <input type=time name=godzina_a class=form-control value={{$tablica_godzin2}}>
      @else
      <input type=time name=godzina_a class=form-control value={{Input::old('godzina_a')}}>
      @endif
-        <select name="godzina_aa" class=form-control>
-        
-  @for($i=0;$i< count($tablica_godzin2);$i++)
-    
-    <option value {{$tablica_godzin2[$i]}}>{{$i}}</option>
-  @endfor
-  </select>
+       
      </div>
-     <div class="col-md-5 col-xs-5">
-        <select name="minuta_a" class=form-control>
-        @for($i=0;$i< count($tablica_minut2);$i++)
-    
-            <option value {{$tablica_minut2[$i]}}>{{$i}}</option>
-        @endfor
-    </select>
-     </div>
+
      </div>
   </div>
 
@@ -262,33 +311,15 @@
   <div class="col-md-3 col-xs-3"><span class="normalna2">Godzina skończenia</span></div>
     <div class="col-md-4 col-xs-4">
     <div class="row">
+    <div class="col-md-5 col-xs-5">
+        
+            
+            </div>
         <div class="col-md-5 col-xs-5">
         <input type=date name=rok_b class=form-control value={{Input::old('rok_b')}}>
-            <select name="rok_bb"  id="rok_b" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
-            </div>
-              <div class="col-md-4 col-xs-4">
-            <select name="miesiac_b" id="miesiac_b" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
             
             </div>
-            <div class="col-md-4 col-xs-4">
-            <select name="dzien_b" id="dzien_b" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-            </div>
+   
   </div>
     </div>
   <div class="col-md-3 col-xs-3">
@@ -300,20 +331,10 @@
      <input type=time name=godzina_b class=form-control value={{Input::old('godzina_b')}}>
      @endif
      
-  <select name="godzina_bb" class=form-control>
-  @for($i=0;$i< count($tablica_godzin3);$i++)
-    
-    <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
-  @endfor
-  </select>
+  
   </div>
   <div class="col-md-5 col-xs-5">
-      <select name="minuta_b" class=form-control>
-        @for($i=0;$i< count($tablica_minut);$i++)
-    
-            <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-        @endfor
-    </select>
+      
   </div>
   </div>
   </div>
@@ -389,31 +410,10 @@
       <div class="row">
         <div class="col-md-4 col-xs-4">
         <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[0]}}>
-            <select name="leki_rok2[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
+           
         </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_miesiac[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_dzien[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
+ 
+       
       </div>
     </div>
   <div class="col-md-3 col-xs-3">
@@ -425,21 +425,9 @@
          <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[0]}}>
          @endif
         
-            <select name="leki_godzina2[]" class=form-control>
-            @for($i=0;$i< count($tablica_godzin3);$i++)
-    
-                <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
-            @endfor
-            </select>
+           
         </div>
-        <div class="col-md-5 col-xs-5">
-            <select name="leki_minuta[]" class=form-control>
-                @for($i=0;$i< count($tablica_minut);$i++)
-    
-                    <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-                @endfor
-            </select>
-        </div>
+       
     </div>
   </div>
 </div>
@@ -470,31 +458,10 @@
       <div class="row">
         <div class="col-md-4 col-xs-4">
         <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[1]}}>
-            <select name="leki_rok2[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
+
         </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_miesiac[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_dzien[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
+      
+
       </div>
     </div>
   <div class="col-md-3 col-xs-3">
@@ -505,21 +472,9 @@
          @else
          <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[1]}}>
          @endif
-            <select name="leki_godzina2[]" class=form-control>
-            @for($i=0;$i< count($tablica_godzin3);$i++)
-    
-                <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
-            @endfor
-            </select>
+           
         </div>
-        <div class="col-md-5 col-xs-5">
-            <select name="leki_minuta[]" class=form-control>
-                @for($i=0;$i< count($tablica_minut);$i++)
-    
-                    <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-                @endfor
-            </select>
-        </div>
+ 
     </div>
   </div>
 </div>
@@ -553,31 +508,10 @@
       <div class="row">
         <div class="col-md-4 col-xs-4">
         <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[2]}}>
-            <select name="leki_rok2[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
+          
         </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_miesiac[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_dzien[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
+ 
+
       </div>
     </div>
   <div class="col-md-3 col-xs-3">
@@ -588,21 +522,9 @@
          @else
          <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[2]}}>
          @endif
-            <select name="leki_godzina2[]" class=form-control>
-            @for($i=0;$i< count($tablica_godzin3);$i++)
-    
-                <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
-            @endfor
-            </select>
+          
         </div>
-        <div class="col-md-5 col-xs-5">
-            <select name="leki_minuta[]" class=form-control>
-                @for($i=0;$i< count($tablica_minut);$i++)
-    
-                    <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-                @endfor
-            </select>
-        </div>
+       
     </div>
   </div>
 </div>
@@ -632,31 +554,10 @@
       <div class="row">
         <div class="col-md-4 col-xs-4">
         <input type=date name=leki_rok[] class=form-control value={{Input::old('leki_rok')[3]}}>
-            <select name="leki_rok2[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
-        </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_miesiac[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
             
         </div>
-        <div class="col-md-4 col-xs-4">
-            <select name="leki_dzien[]" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-        </div>
+       
+   
       </div>
     </div>
   <div class="col-md-3 col-xs-3">
@@ -667,21 +568,9 @@
          @else
          <input type=time name=leki_godzina[] class=form-control value={{Input::old('leki_godzina')[3]}}>
          @endif
-            <select name="leki_godzina2[]" class=form-control>
-            @for($i=0;$i< count($tablica_godzin3);$i++)
-    
-                <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
-            @endfor
-            </select>
+          
         </div>
-        <div class="col-md-5 col-xs-5">
-            <select name="leki_minuta[]" class=form-control>
-                @for($i=0;$i< count($tablica_minut);$i++)
-    
-                    <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-                @endfor
-            </select>
-        </div>
+       
     </div>
   </div>
   
@@ -716,7 +605,7 @@
     <div class="col-md-5 col-xs-5"></div>
         <div class="col-md-3 col-xs-3"><button  class="btn btn-primary" >dodaj</button>
         
-        <input type=button class="btn btn-danger" onclick=zapisz_nastroj('{{ url('/ajax/dodaj_nastroj')}}')  value="dodaj"></div>
+        
     </div>
     <div class="row">
         <div class="col-md-2 col-xs-2"></div>
@@ -729,6 +618,15 @@
     </div>
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     </form>
+    <div class="row">
+<div class="col-md-5 col-xs-5">
+
+</div>
+<div class="col-md-4 col-xs-4">
+<span class=wieksza>Dodaj nowy sen</span>
+</div>
+
+</div>
 <div class="row">
   <form action={{ url('dodaj_sen') }} method=post>
   <div class="col-md-1 col-xs-1"></div>
@@ -738,55 +636,17 @@
       <div class="row">
         <div class="col-md-4 col-xs-4">
         <input type=date name=rok_a class=form-control>
-            <select name="rok_aa" class=form-control  value={{Input::old('rok_a')}}>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
+           
             </div>
-              <div class="col-md-4 col-xs-4">
-            <select name="miesiac_a" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-            </div>
-            <div class="col-md-4 col-xs-4">
-            <select name="dzien_a" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
-            
-            </div>
-  </div>
-    </div>
-  <div class="col-md-3 col-xs-3">
-     <div class="row">
-     <div class="col-md-5 col-xs-5">
+                 <div class="col-md-5 col-xs-5">
      
      <input type=time name=godzina_a class=form-control value="{{$tablica_godzin4}}">
-        <select name="godzina_aa" class=form-control>
-  @for($i=0;$i< count($tablica_godzin4);$i++)
-    
-    <option value {{$tablica_godzin4[$i]}}>{{$i}}</option>
-  @endfor
-  </select>
-     </div>
-     <div class="col-md-5 col-xs-5">
-        <select name="minuta_a" class=form-control>
-        @for($i=0;$i< count($tablica_minut);$i++)
-    
-            <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-        @endfor
-    </select>
-     </div>
-     </div>
+        
+     </div> 
+     
   </div>
+    </div>
+
   </div>
   
   <div class="row">
@@ -796,52 +656,19 @@
     <div class="row">
         <div class="col-md-4 col-xs-4">
         <input type=date name=rok_b class=form-control>
-            <select name="rok_bb" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i < count($rok_zaczecia);$i++)
-                <option value={{$rok_zaczecia[$i]}}>{{$rok_zaczecia[$i]}}</option>
-            @endfor
-            </select>
-            </div>
-              <div class="col-md-4 col-xs-4">
-            <select name="miesiac_b" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 12;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
             
             </div>
-            <div class="col-md-4 col-xs-4">
-            <select name="dzien_b" class=form-control>
-            <option value=""></option>
-            @for ($i=0;$i <= 31;$i++)
-                <option value={{$i}}>{{$i}}</option>
-            @endfor
-            </select>
+                 <div class="col-md-5 col-xs-5">
+     <input type=time name=godzina_b class=form-control value={{$tablica_godzin3}}>
+  
+  </div> 
             
-            </div>
   </div>
     </div>
   <div class="col-md-3 col-xs-3">
      <div class="row">
-     <div class="col-md-5 col-xs-5">
-     <input type=time name=godzina_b class=form-control value={{$tablica_godzin3}}>
-  <select name="godzina_bb" class=form-control>
-  @for($i=0;$i< count($tablica_godzin3);$i++)
-    
-    <option value {{$tablica_godzin3[$i]}}>{{$i}}</option>
-  @endfor
-  </select>
-  </div>
-  <div class="col-md-5 col-xs-5">
-      <select name="minuta_b" class=form-control>
-        @for($i=0;$i< count($tablica_minut);$i++)
-    
-            <option value {{$tablica_minut[$i]}}>{{$i}}</option>
-        @endfor
-    </select>
-  </div>
+
+ 
   </div>
   </div>
   
@@ -871,6 +698,12 @@
 </div>
 
 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+<div class="row">
+    <div class="col-md-5 col-xs-5"></div>
+        <div class="col-md-3 col-xs-3"><button  class="btn btn-primary" >dodaj</button>
+        
+        
+    </div>
 </form>
 <script language="javascript">
 

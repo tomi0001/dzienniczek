@@ -18,6 +18,8 @@ class Controller_dodawanie2 extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     public function dodaj_sen() {
         $data3 = new \App\Http\Controllers\data();
+        $bledy = array();
+        $i = 0;
         $bool = false;
         if ( strstr(Input::get('rok_b'),"-")) {
             $rok_bb = explode("-",Input::get('rok_b'));
@@ -43,18 +45,45 @@ class Controller_dodawanie2 extends BaseController
             $dzien_a = "";
         
         }
+        if (!strstr(Input::get('godzina_a'),":") or  !strstr(Input::get('godzina_b'),":")) {
+            $bool=true;
+            $bledy[$i] = "Podana data 1 lub 2 ma niewłaściwy format";
+            $i++;      
+            $wybudzenia = Input::get('wybudzenia');
+            $wynik = 0;
+            $wynik2 = 0;
+            $wynik3 = 0;
+            $godzina_aa = "00:00:00";
+            $godzina_bb = "00:00:00";
+        }
+        else {
         $godzina_aa = explode(":",Input::get('godzina_a'));
-        $godzina_a = $godzina_aa[0];
+        
         $godzina_bb = explode(":",Input::get('godzina_b'));
+        
+        
+        $wybudzenia = Input::get('wybudzenia');
+        
+        
+        }
+        $godzina_a = $godzina_aa[0];
         $minuta_a = $godzina_aa[1];
         $godzina_b = $godzina_bb[0];
         $minuta_b = $godzina_bb[1];
-
-        $wybudzenia = Input::get('wybudzenia');
         $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false);
         $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
-        $i = 0;
-        print $wynik . "<br>";
+        $wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b,false);
+        if ($wynik == 1) {
+            $data11 = $data3->ustaw_date_1($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
+            
+        }
+        else {
+            $data11 = $data3->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
+        }
+        
+
+        $data22 = $data3->ustaw_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
+        $ostatnia_godzina = $data3->sprawdz_czy_dany_nastroj_sen_nie_nanosi_sie_na_poprzedni_nastroj($data11,$data22);
         if ($wynik2 == -2 or $wynik2 == -4) {
             $bool=true;
             $bledy[$i] = "Podana data 2 jest większa od teraźniejszej daty";
@@ -80,30 +109,34 @@ class Controller_dodawanie2 extends BaseController
             $bledy[$i] = "Podana data 1 jest większa od teraźniejszej daty";
             $i++;            
         }
-        if ($wynik == -1) {
+        if ($wynik3 == -1) {
             $bool=true;
             $bledy[$i] = "Podana data 1 jest większa od  daty 2";
             $i++;            
         }
+        if ($ostatnia_godzina == false) {
+        
+            $bool=true;
+            $bledy[$i] = "Dane któregos nastroju pokładają się z datą poprzedniego nastroju";
+            $i++;  
+        }
         if ($bool == true) {
-            print "dobrze";
-            //return Redirect::to('glowna')->with('bledy','fffff');
+
             return back()->withInput()->withErrors($bledy);
-            //return Redirect::to('glowna')->with('bledy',$bledy);
+      
         }
         
-        if ($wynik == 1) {
-            $data11 = $data3->ustaw_date_1($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
-            
-        }
-        else {
-            $data11 = $data3->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
-        }
-        //print $godzina_a;
-        $data22 = $data3->ustaw_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
+        
+        
+        
+        if ($bool == false) {
         $this->zapisz_sen($data11,$data22,$wybudzenia);
+        return back()->withInput()->with(true);
+            
+        
+        }
         //$wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b);
-        print $data11 . "<br>" . $data22;
+      //  print $data11 . "<br>" . $data22;
     }
     private function zapisz_sen($data1,$data2,$wybudzenia) {
         if ($wybudzenia == "") $wybudzenia = 0;

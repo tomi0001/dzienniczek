@@ -33,14 +33,13 @@ Route::get('/ajax/dodaj_lek','Controller_ajax@dodaj_lek');
 Route::get('/ajax/edytuj_opis','Controller_ajax@edytuj_opis');
 Route::get('/ajax/dodaj_opis','Controller_ajax@dodaj_opis');
 Route::get('/ajax/usun_nastroj','Controller_ajax@usun_nastroj');
-Route::get('/ajax/usun_sen','Controller_ajax@usun_sen');
 Route::get('wyszukaj','Controller_szukaj@szukaj');
 
 Route::get('wyszukaj2/{strona?}','Controller_szukaj@szukaj2');
 Route::post('dodaj_wpis','Controller_dodawanie@dodaj_wpis');
 Route::post('dodaj_sen','Controller_dodawanie2@dodaj_sen');
-Route::get('aut/facebook', 'AuthController@redirectToProvider');
-Route::get('aut/facebook/callback', 'AuthController@handleProviderCallback');
+Route::get('aut/{provider}', 'AuthController@redirectToProvider');
+Route::get('aut/{provider}/callback', 'AuthController@handleProviderCallback');
 
 
 

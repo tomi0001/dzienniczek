@@ -1,10 +1,6 @@
 body {
   
-  
  background-image: url('./tlo.png'); /* from http://subtlepatterns.com */
-  
-  
-  
   
   
 }
@@ -398,8 +394,26 @@ span.normalna4 {
     
 }
 
+.strona_aktywna {
+    background-color: red;
+    border-radius: 6px; 
+    
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    padding: 5px 10px;
+    color:white;
+}
+.strona_nie_aktywna {
+    background-color: green;
+    border-radius: 6px; 
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    padding: 5px 10px;
 
-
+}
 .div1 {
   background-color: #000000;
     
@@ -513,12 +527,26 @@ margin-right: auto;
     color: white;
     opacity: 0.7;
 }
+.tlo2 {
+    background-color: red;
+    border-radius: 5px;  
+    color: white;
+    opacity: 0.7;
+}
+.tlo3 {
+    background-color: red;
+    border-radius: 5px;  
+    color: white;
+    opacity: 0.7;
+    width: 250px;
+}
 .usun_lek {
     background-color: #20042E;
     border-radius: 25px; 
     color: white;
 }
 a.menu {color:#d1db37; font-size: 17px;}
+a.strona_hiper {color: white;}
 a.menu:hover {color:#B7BC2E; font-size: 17px;}
 a.kalendarz {color: #3D5C07; font-size: 17px;}
 a.kalendarz:hover {color: gray; font-size: 18px;}
@@ -530,5 +558,7 @@ span.pogrubiona {color:#dbe538;font-size: 21px;}
 span.blad {color:#FF0000;font-size: 16px;}
 span.succes {color:#c4b90c;font-size: 21px;}
 span.succes2 {color:#E3DA36;font-size: 16px;}
+span.psycho {color:white;font-size: 16px;}
+span.pouczenie {color:white;font-size: 13px;}
 a.przycisk {color: #EBD323; font-size: 19px;}
 a.przycisk:hover {color: #EBD323; font-size: 19px;}

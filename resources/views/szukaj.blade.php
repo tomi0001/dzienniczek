@@ -4,7 +4,7 @@
     
     <div class=szukaj>
     
-        <form action = "{{ url('wyszukaj2') }}" method=post>
+        <form action = "{{ url('wyszukaj2') }}" method=get>
     
     <div class="row">
             <div class="col-md-1 col-xs-1">
@@ -193,6 +193,41 @@
             </div>
             
         </div>
+            <div class="row">
+            <div class="col-md-1 col-xs-1">
+            
+            </div>
+            <div class="col-md-2 col-xs-2">
+            <span class=normalna2>Wyszukaj następujące leki</span>
+            </div>
+            <div class="col-md-5 col-xs-5">
+                <div align=center><input type=text class=form-control name=leki></div>
+            </div>
+            
+        </div>
+        
+            <div class="row">
+            <div class="col-md-1 col-xs-1">
+            
+            </div>
+            <div class="col-md-2 col-xs-2">
+            <span class=normalna2>Sortuj według</span>
+            </div>
+            <div class="col-md-5 col-xs-5">
+                <div align=center><select class=form-control name=sortuj>
+                <option value=godzina_zaczecia>Według daty</option>
+                <option value=poziom_nastroju>Według nastroju</option>
+                <option value=poziom_leku>Według poziomu lęku</option>
+                <option value=poziom_zdenerwania>Według poziomu zdenerwowania</option>
+                <option value=pobudzenie>Według poziomu pobudzenia</option>
+                <option value=czas>Sotruj według długości trwania nastroju</option>
+                </select>
+                </div>
+            </div>
+            
+        </div>
+
+        
         <div class="row">
             <div class="col-md-12 col-xs-12">
                 <div align=center><button class="btn btn-primary">szukaj</button></div>
@@ -201,6 +236,9 @@
         </div>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
+    </div>
+
+  
     </div>
     
 @endsection
