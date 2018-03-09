@@ -90,12 +90,12 @@ class data extends BaseController
     
         public function rok_zaczecia($id_user)  {
         $tablica = array();
-        $najmlodszy_rok = DB::select("select godzina_zaczecia from nastroj where id_users = '$id_user' order by godzina_zaczecia limit 1");
+        $najmlodszy_rok = DB::select("select year(godzina_zaczecia) as godzina_zaczecia from nastroj where id_users = '$id_user' order by godzina_zaczecia limit 1");
         foreach ($najmlodszy_rok as $najmlodszy_rok2) {
             
         }
-        if (empty($najmlodszy_rok2->data_dodania) ) $data_dodania = date("Y");
-        else $data_dodania = $najmlodszy_rok2->data_dodania;
+        if (empty($najmlodszy_rok2->godzina_zaczecia) ) $data_dodania = date("Y");
+        else $data_dodania = $najmlodszy_rok2->godzina_zaczecia;
         $i = $data_dodania;
         $j = 0;
         while ($i <= date("Y")) {

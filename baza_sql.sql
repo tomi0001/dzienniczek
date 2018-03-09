@@ -28,13 +28,7 @@ SET time_zone = "+00:00";
 -- Struktura tabeli dla tabeli `dni_nastrojow`
 --s
 
-CREATE TABLE `dni_nastrojow` (
-  `id` int(11) NOT NULL,
-  `data` date DEFAULT NULL,
-  `id_dnia` int(11) DEFAULT NULL,
-  `nastroj` int(11) NOT NULL,
-  `liczba_sekund` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 --
 -- Zrzut danych tabeli `dni_nastrojow`
@@ -47,13 +41,7 @@ CREATE TABLE `dni_nastrojow` (
 -- Struktura tabeli dla tabeli `dziennik`
 --
 
-CREATE TABLE `dziennik` (
-  `id` int(11) NOT NULL,
-  `id_users` int(11) NOT NULL,
-  `id_nastroj` int(11) NOT NULL,
-  `id_sen` int(11) NOT NULL,
-  `data_dodania` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
@@ -104,18 +92,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `nastroj` (
   `id` int(11) NOT NULL,
-  `id_dziennik` int(11) DEFAULT NULL,
   `godzina_zaczecia` datetime NOT NULL,
   `godzina_zakonczenia` datetime NOT NULL,
   `id_users` int(11) NOT NULL,
   `poziom_nastroju` smallint(6) NOT NULL,
   `co_robilem` text COLLATE utf8mb4_unicode_ci,
-  `id_lekow` int(11) DEFAULT NULL,
   `poziom_leku` smallint(6) NOT NULL,
   `poziom_zdenerwania` smallint(6) NOT NULL,
   `epizod_psychotyczne` smallint(6) NOT NULL,
   `pobudzenie` smallint(6) NOT NULL,
-  `id_dnia` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -162,7 +147,6 @@ CREATE TABLE `przekierowanie_lekow` (
 CREATE TABLE `sen` (
   `id` int(11) NOT NULL,
   `id_users` int(11) NOT NULL,
-  `id_dziennik` int(11) DEFAULT NULL,
   `data_rozpoczecia` datetime NOT NULL,
   `data_zakonczenia` datetime NOT NULL,
   `ilosc_wybudzen` tinyint(4) DEFAULT NULL
@@ -188,7 +172,6 @@ CREATE TABLE `users` (
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `poczatek_dnia` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

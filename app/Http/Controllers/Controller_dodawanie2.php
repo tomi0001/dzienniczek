@@ -81,7 +81,7 @@ class Controller_dodawanie2 extends BaseController
             $data11 = $data3->ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
         }
         
-
+        //print $godzina_a;
         $data22 = $data3->ustaw_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
         $ostatnia_godzina = $data3->sprawdz_czy_dany_nastroj_sen_nie_nanosi_sie_na_poprzedni_nastroj($data11,$data22);
         if ($wynik2 == -2 or $wynik2 == -4) {
@@ -121,7 +121,8 @@ class Controller_dodawanie2 extends BaseController
             $i++;  
         }
         if ($bool == true) {
-
+            
+            
             return back()->withInput()->withErrors($bledy);
       
         }

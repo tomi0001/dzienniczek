@@ -25,6 +25,7 @@ class Controller_szukaj extends BaseController
         
         $data3 = new \App\Http\Controllers\data();
         $rok_zaczecia = $data3->rok_zaczecia(Auth::User()->id);
+        //var_dump($rok_zaczecia);
         return View('szukaj')->with('rok_zaczecia',$rok_zaczecia);
     
     }
@@ -63,7 +64,9 @@ class Controller_szukaj extends BaseController
      ->with('opis',urlencode(Input::get('opis')))
      ->with('sortuj',Input::get('sortuj'))
      ->with('leki',urlencode(Input::get('leki')))
-     ->with('tablica',$tablica);
+     ->with('tablica',$tablica)
+     ->with('nastroj_godzina',Input::get('nastroj_godzina'))
+     ->with('nastroj_godzina2',Input::get('nastroj_godzina2'));
 
    }
     }
@@ -178,7 +181,7 @@ class Controller_szukaj extends BaseController
         $liczba_rekordow .= " where nastroj.id_users = $id_user ";
        }
 
-       if (Input::get("nastroj_od") != "" or Input::get("nastroj_do") != "" or Input::get('lek_od') != "" or Input::get('lek_do') != "" or Input::get('pobudzenie_od') != "" or Input::get('pobudzenie_do') != "" or Input::get('zdenerowania_od') != "" or Input::get('zdenerowania_do') != "" or Input::get('nastroj_rok') != "" or Input::get('nastroj_miesiac') != "" or Input::get('nastroj_dzien') != "" or Input::get('nastroj_rok2') != ""  or Input::get('nastroj_miesiac2') != ""  or Input::get('nastroj_dzien2') != "" or Input::get('opis') != "" ) {
+       if (Input::get("nastroj_od") != "" or Input::get("nastroj_do") != "" or Input::get('lek_od') != "" or Input::get('lek_do') != "" or Input::get('pobudzenie_od') != "" or Input::get('pobudzenie_do') != "" or Input::get('zdenerowania_od') != "" or Input::get('zdenerowania_do') != "" or Input::get('nastroj_rok') != "" or Input::get('nastroj_miesiac') != "" or Input::get('nastroj_dzien') != "" or Input::get('nastroj_rok2') != ""  or Input::get('nastroj_miesiac2') != ""  or Input::get('nastroj_dzien2') != "" or Input::get('opis') != "" or Input::get('nastroj_godzina') != "" or Input::get('nastroj_godzina2') != "") {
 
             if (Input::get('opis') != "") {
             
@@ -230,7 +233,9 @@ class Controller_szukaj extends BaseController
             $users .= " and godzina_zaczecia <= '" . Input::get('nastroj_rok2') . "-" . Input::get('nastroj_miesiac2') . "-" . Input::get('nastroj_dzien2') . " '";
             $liczba_rekordow .= " and godzina_zaczecia <= '" . Input::get('nastroj_rok2') . "-" . Input::get('nastroj_miesiac2') . "-" . Input::get('nastroj_dzien2') . " '";
          }
+         
          else {
+         
          if (Input::get('nastroj_rok') != "") {
          $users .= " and year(godzina_zaczecia) >=" . Input::get('nastroj_rok') ;
          $liczba_rekordow .= " and year(godzina_zaczecia) >=" . Input::get('nastroj_rok') ;
@@ -255,6 +260,15 @@ class Controller_szukaj extends BaseController
          if (Input::get('nastroj_dzien2') != "") {
          $users .= " and day(godzina_zaczecia) <=" . Input::get('nastroj_dzien2') ;
          $liczba_rekordow .= " and day(godzina_zaczecia) <=" . Input::get('nastroj_dzien2') ;
+         }
+         if (Input::get('nastroj_godzina') != "") {
+         //print "dupa";
+         $users .= " and hour(godzina_zaczecia) >=" . Input::get('nastroj_godzina');
+         $liczba_rekordow .= " and hour(godzina_zaczecia) >=" . Input::get('nastroj_godzina');
+         }
+         if (Input::get('nastroj_godzina2') != "") {
+         $users .= " and hour(godzina_zaczecia) <=" . Input::get('nastroj_godzina2') ;
+         $liczba_rekordow .= " and hour(godzina_zaczecia) <=" . Input::get('nastroj_godzina2') ;
          }
          }
         

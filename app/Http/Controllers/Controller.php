@@ -207,7 +207,7 @@ class Controller extends BaseController
             'login' => Input::get('name'),
             'password' => Input::get('password')
         );
-        $haslo2 = sha1($user['password']);
+        $haslo2 = Hash::make($user['password']);
 
         if (Input::get('name') == "" and Input::get('haslo') == "" ) {
             return Redirect('blad')->with('login_error','Uzupełnij pole login i hasło');

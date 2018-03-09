@@ -189,7 +189,7 @@
 </div>
 @else
 <div class=strona_nie_aktywna>
-<a class=strona_hiper href={{ url('wyszukaj2')}}/{{$tablica[$i][0]}}?nastroj_od={{$nastroj_od}}&nastroj_do={{$nastroj_do}}&lek_od={{$lek_od}}&lek_do={{$lek_do}}&pobudzenie_od={{$pobudzenie_od}}&pobudzenie_do={{$pobudzenie_do}}&zdenerowania_od={{$zdenerowania_od}}&zdenerowania_do={{$zdenerowania_do}}&nastroj_rok={{$nastroj_rok}}&nastroj_rok2={{$nastroj_rok2}}&nastroj_miesiac={{$nastroj_miesiac}}&nastroj_miesiac2={{$nastroj_miesiac2}}&nastroj_dzien={{$nastroj_dzien}}&nastroj_dzien2={{$nastroj_dzien2}}&opis={{$opis}}&sortuj={{$sortuj}}&leki={{$leki}}>{{$tablica[$i][0]}} </a>
+<a class=strona_hiper href={{ url('wyszukaj2')}}/{{$tablica[$i][0]}}?nastroj_od={{$nastroj_od}}&nastroj_do={{$nastroj_do}}&lek_od={{$lek_od}}&lek_do={{$lek_do}}&pobudzenie_od={{$pobudzenie_od}}&pobudzenie_do={{$pobudzenie_do}}&zdenerowania_od={{$zdenerowania_od}}&zdenerowania_do={{$zdenerowania_do}}&nastroj_rok={{$nastroj_rok}}&nastroj_rok2={{$nastroj_rok2}}&nastroj_miesiac={{$nastroj_miesiac}}&nastroj_miesiac2={{$nastroj_miesiac2}}&nastroj_dzien={{$nastroj_dzien}}&nastroj_dzien2={{$nastroj_dzien2}}&opis={{$opis}}&nastroj_godzina={{$nastroj_godzina}}&nastroj_godzina2={{$nastroj_godzina2}}&sortuj={{$sortuj}}&leki={{$leki}}>{{$tablica[$i][0]}} </a>
 </div>
 
 @endif

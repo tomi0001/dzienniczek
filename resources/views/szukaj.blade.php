@@ -112,7 +112,7 @@
             <div class="col-md-5 col-xs-5">
          
                 <div class="row">
-                    <div class="col-md-5 col-xs-5">
+                    <div class="col-md-3 col-xs-3">
                          <select name="nastroj_rok" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
@@ -136,7 +136,14 @@
                 @endfor
                 </select>
                     </div>               
-     
+     <div class="col-md-3 col-xs-3">
+                                    <select name="nastroj_godzina" class=form-control>
+            <option value=""></option>
+            @for ($i=0;$i <= 23;$i++)
+                <option value={{$i}}>{{$i}}</option>
+                @endfor
+                </select>
+                    </div>         
                 </div>
             </div>
 
@@ -152,7 +159,7 @@
             <div class="col-md-5 col-xs-5">
          
                 <div class="row">
-                    <div class="col-md-5 col-xs-5">
+                    <div class="col-md-3 col-xs-3">
                          <select name="nastroj_rok2" class=form-control>
             <option value=""></option>
             @for ($i=0;$i < count($rok_zaczecia);$i++)
@@ -175,7 +182,15 @@
                 <option value={{$i}}>{{$i}}</option>
                 @endfor
                 </select>
-                    </div>               
+                    </div> 
+                    <div class="col-md-3 col-xs-3">
+                                    <select name="nastroj_godzina2" class=form-control>
+            <option value=""></option>
+            @for ($i=0;$i <= 23;$i++)
+                <option value={{$i}}>{{$i}}</option>
+                @endfor
+                </select>
+                    </div>         
      
                 </div>
             </div>
