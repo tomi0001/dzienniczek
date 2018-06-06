@@ -294,7 +294,7 @@
      <div class="row">
      
      <div class="col-md-5 col-xs-5">
-     @if (empty(Input::old('godzina_a')))
+     @if (empty(Input::old('godzina_a')) or $godzina != true)
      <input type=time name=godzina_a class=form-control value={{$tablica_godzin2}}>
      @else
      <input type=time name=godzina_a class=form-control value={{Input::old('godzina_a')}}>
@@ -640,8 +640,8 @@
             </div>
                  <div class="col-md-5 col-xs-5">
      
-     <input type=time name=godzina_a class=form-control value="{{$tablica_godzin4}}">
-        
+     <input type=time name=godzina_a class="form-control timeago"  value="{{$tablica_godzin4}}">
+        <time class="timeago" datetime="2008-07-17T09:24:17Z">July 17, 2008</time>
      </div> 
      
   </div>
@@ -655,11 +655,11 @@
     <div class="col-md-4 col-xs-4">
     <div class="row">
         <div class="col-md-4 col-xs-4">
-        <input type=date name=rok_b class=form-control>
+        <input type=text name=rok_b id=date2 class=form-control>
             
             </div>
                  <div class="col-md-5 col-xs-5">
-     <input type=time name=godzina_b class=form-control value={{$tablica_godzin3}}>
+     <input type=text name=godzina_b  class=form-control value={{$tablica_godzin3}}>
   
   </div> 
             

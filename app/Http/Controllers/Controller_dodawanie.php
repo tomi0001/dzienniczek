@@ -33,7 +33,7 @@ class Controller_dodawanie extends BaseController
         $bool = false;
         $i = 0;
         $bledy = array();
-        
+        //tutaj początek
         if ( strstr(Input::get('rok_b'),"-")) {
             $rok_bb = explode("-",Input::get('rok_b'));
             $rok_b = $rok_bb[0];
@@ -70,13 +70,14 @@ class Controller_dodawanie extends BaseController
             $godzina_aa = explode(":",Input::get('godzina_a'));
             $godzina_bb = explode(":",Input::get('godzina_b'));
         }
+        //print $godzina_a;
         $godzina_a = $godzina_aa[0];
         
         $minuta_a = $godzina_aa[1];
         $godzina_b = $godzina_bb[0];
         $minuta_b = $godzina_bb[1];
         $tablica_godzin2 = $data3->rysuj_dla_godziny($godzina_b,3);
-        
+        //tutaj koniec
         $tablica_godzin2 = $tablica_godzin2 . ":00:00";
         $leki = Input::get("leki");
         $leki2 = Input::get("leki2");
@@ -85,20 +86,21 @@ class Controller_dodawanie extends BaseController
         $leki_rok = Input::get("leki_rok");
         $leki_godzina = Input::get("leki_godzina");
         $co_robilem = Input::get("co_robilem");
+        //poczatek
         $psychotyczne = Input::get("psychotyczne");
    
         $pobudzenie = Input::get("pobudzenie");
         $nastroj = Input::get('nastroj');
         $lek = Input::get('lek');
         $zdenerowanie = Input::get('zdenerowanie');
-    
+	
         $nastroj2=  $this->sprawdz_nastroj_lek(Input::get('nastroj'));
         $lek2 =     $this->sprawdz_nastroj_lek(Input::get('lek'));
         $pobudzenie2 =     $this->sprawdz_nastroj_lek(Input::get("pobudzenie"));
         $zdenerowanie2 = $this->sprawdz_nastroj_lek(Input::get('zdenerowanie'));
 
-        
-        
+        //koniec
+        //pocztaek
         if ($nastroj2 == -1) {
             $bledy[$i] = "Pole nastroj musi mieć wartości od -20 do +20";
             $bool=true;

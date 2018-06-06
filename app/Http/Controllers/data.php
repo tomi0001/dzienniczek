@@ -13,17 +13,19 @@ class data extends BaseController
     public $data1;
     public $data2;
    public function ustaw_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,$status = false,$status2 = false) {
-
+	    //jeżeli zmienna $status ma true no to wtedy oznacza to to, że ma dla ktualnej daty ustawić datę wczorajszą
             if ($status == true) {
                 $data11 = date("Y-m-d");
                 $data2 = strtotime($data11) - 84600;
                 $data1 = date("Y-m-d",$data2) .  " " . $godzina_a . ":" . $minuta_a . ":00";
             }
+            //w przeciwnym razie i kiedy wszystkie zmiennej przyjmą wartośc pustą tu ustaw datę dzisiajszą z podanymi godzinami
             elseif ($rok_a == "" and $miesiac_a == "" and $dzien_a == "") {
              $data1 = date("Y-m-d") .  " " . $godzina_a . ":" . $minuta_a . ":00";
 
             }
             else {
+            //w przeciwnym kiedy wartości rok miesiac i dzien będą miały jakąś wartośc to ustaw takie
                 $data1 = $rok_a . "-" . $miesiac_a . "-" .  $dzien_a  . " " . $godzina_a . ":" . $minuta_a . ":00";
             }
             if   ($status2 == false) {
@@ -75,6 +77,7 @@ class data extends BaseController
     public function porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b,$bool) {
         //jeżeli bool jest true to znaczy, że 
         $wynik = $godzina_b - $godzina_a;
+        if ($bool == false) return 0;
         if ($bool == true) {
             $godzina_b = date("H");
             $minuta_b = date("i");
@@ -215,14 +218,17 @@ class data extends BaseController
         
     }
     public function porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b,$status = true) {
+    //print "kupa";
        if ($rok_a == "" and $miesiac_a == "" and $dzien_a == "" and $rok_b == "" and $miesiac_b == "" and $dzien_b == "") {
         $data1 = $this->porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b,false);
         return $data1;
        }
+       //print "kupa";
        $cmp =  strtotime($rok_a . "-" . $miesiac_a . "-" . $dzien_a . " " . $godzina_a . ":" . $minuta_a . ":00");
        $cmp2 = strtotime($rok_b . "-" . $miesiac_b . "-" . $dzien_b . " " . $godzina_b . ":" . $minuta_b . ":00");
        if ($status == false) {
         $cmp -= 86400;
+        //print "kupa";
        }
        $wynik = $cmp2 - $cmp;
 
@@ -323,11 +329,11 @@ class data extends BaseController
      public function oblicz_ilosc_minut_i_godzin2($data1,$data2) {
         
         $wynik = strtotime($data2) - strtotime($data1);
-        if ($wynik < 3600) $wynik4 = "Minut " . (int)($wynik / 60);
+        if ($wynik < 3600) $wynik4 = "Minut " . round(($wynik / 60),0);
         else {
             $wynik2 = $wynik / 3600;
             
-            $wynik5 =  $wynik2 - (int) $wynik2;
+            $wynik5 =  $wynik2 - round($wynik2,0);
             if (($wynik5) == 0) {
                 $wynik4 = "Godzin " . $wynik2;
                
@@ -336,7 +342,7 @@ class data extends BaseController
                  $wynik3 = explode(".",$wynik2);
                  $wynik6 = "0." . $wynik3[1];
                  $wynik6 *= 60;
-                $wynik4 = "Godzin " . $wynik3[0] . " i minut " . (int)$wynik6;
+                $wynik4 = "Godzin " . $wynik3[0] . " i minut " . round($wynik6,0);
                
             }
             

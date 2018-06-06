@@ -63,7 +63,7 @@ class Controller_dodawanie2 extends BaseController
         
         
         $wybudzenia = Input::get('wybudzenia');
-        
+        //print Input::get('godzina_a');
         
         }
         $godzina_a = $godzina_aa[0];
@@ -73,6 +73,7 @@ class Controller_dodawanie2 extends BaseController
         $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false);
         $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
         $wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b,false);
+        
         if ($wynik == 1) {
             $data11 = $data3->ustaw_date_1($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a);
             
@@ -126,13 +127,13 @@ class Controller_dodawanie2 extends BaseController
             return back()->withInput()->withErrors($bledy);
       
         }
-        
+        //var_dump($bledy);
         
         
         
         if ($bool == false) {
         $this->zapisz_sen($data11,$data22,$wybudzenia);
-        return back()->withInput()->with(true);
+        return back()->with(true)->with("godzina",true);
             
         
         }

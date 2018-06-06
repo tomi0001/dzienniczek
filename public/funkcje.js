@@ -1,4 +1,17 @@
+  $( function() {
+    
+    $( "#date2" ).datepicker({dateFormat: "yy-mm-dd"});
+    
+  } );
+  
 
+$(document).ready(function(){
+     $('#czas').timepicker({});
+     jQuery("time.timeago").timeago();
+     alert("dobrze");
+});
+
+//alert("dobrze");
 $('#menu3').click(function() {
     
   $('.menu3').slideToggle();

@@ -47,6 +47,7 @@ class Controller_strona extends BaseController
           if ($date[4] == "dalej")  {
             $dzien3 = 1;
           }
+          print $date[3];
           //zmienne drukujące poprzedniego miesiąca i nastepnego
         $poprzedni = $this->zwroc_poprzedni_miesiac($date[0],$date[1]);
         $nastepny = $this->zwroc_nastepny_miesiac($date[0],$date[1]);
@@ -86,7 +87,7 @@ class Controller_strona extends BaseController
             $wynik3 = $this->wyciagnij_dane("poziom_leku",$date[1],$date[0],$date[2]);
             $wynik4 = $this->wyciagnij_dane("poziom_zdenerwania",$date[1],$date[0],$date[2]);
             $wynik5 = $this->wyciagnij_dane("pobudzenie",$date[1],$date[0],$date[2]);
-            
+             
            
             $this->wybierz_nastroj_sen($date[1],$date[2],$date[0]);
             $this->wpisy = $data3->okresl_dlugosc_daty_w_procentach($this->wpisy);
@@ -116,7 +117,8 @@ class Controller_strona extends BaseController
             ->with('wynik2',$wynik2)
             ->with('wynik3',$wynik3)
             ->with('wynik4',$wynik4)
-            ->with('wynik5',$wynik5);
+            ->with('wynik5',$wynik5)
+            ->with("godzina",false);
         }   
         else {
             return Redirect('blad')->with('login_error','Nie masz dostępu do tej części strony');
@@ -247,7 +249,7 @@ class Controller_strona extends BaseController
         $data = new \App\Http\Controllers\data();
         $id_users = Auth::User()->id;
         $data1  = $rok . "-" . $miesiac . "-" . $dzien;
-        $data1 .= " 23:00:00";
+        $data1 .= " 23:59:00";
         $data2 = strtotime($data1);
         
         $data2 = $data2 -  86400;
@@ -353,6 +355,7 @@ class Controller_strona extends BaseController
     private function wyciagnij_godzine_ostatniego_wpisu($id_users) {
         $wpis = DB::select("SELECT godzina_zakonczenia FROM `nastroj` where id_users = '$id_users' order by godzina_zakonczenia DESC limit 1");
         foreach ($wpis as $wpis2) {}
+       // print $wpis2->godzina_zakonczenia;
         $sen = DB::select("SELECT data_zakonczenia FROM `sen` where id_users = '$id_users' order by data_zakonczenia DESC limit 1");
         foreach ($sen as $sen2) {}
         if (empty($wpis2->godzina_zakonczenia) ) return 0;
