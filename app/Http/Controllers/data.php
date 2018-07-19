@@ -76,7 +76,8 @@ class data extends BaseController
     
     public function porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b,$bool) {
         //jeżeli bool jest true to znaczy, że 
-        $wynik = $godzina_b - $godzina_a;
+     //   print $godzina_a;
+        $wynik = (int)$godzina_b - (int)$godzina_a;
         if ($bool == false) return 0;
         if ($bool == true) {
             $godzina_b = date("H");
@@ -89,7 +90,8 @@ class data extends BaseController
         if ($wynik > 10) return -5;
         return 0;
     
-    }
+    }//php artisan migrate:make 2018_06_07_095037_create_projects_table 
+
     
         public function rok_zaczecia($id_user)  {
         $tablica = array();

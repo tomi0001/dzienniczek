@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-md-4 col-xs-4">
     </div>
-    <div class="col-md-5 col-xs-5">
+    <div class="col-md-5 col-xs-5"> 
         
        <div class="nastroj {{$wynik3[0][1]}}" style="width: 100%;">Wartość lęku dla tego dnia to {{$wynik3[0][0]}}
         
@@ -284,7 +284,7 @@
             </div>
             <div class="col-md-5 col-xs-5">
         
-            <input type=date name=rok_a class=form-control value={{Input::old('rok_a')}}>
+            <input type=date name=rok_a class=form-control id=date2 value={{Input::old('rok_a')}}>
             
             </div>
   
@@ -635,7 +635,7 @@
   
       <div class="row">
         <div class="col-md-4 col-xs-4">
-        <input type=date name=rok_a class=form-control>
+        <input type=date name=rok_a class=form-control id=date5 value={{Input::old('rok_a')}}>
            
             </div>
                  <div class="col-md-5 col-xs-5">
@@ -655,7 +655,7 @@
     <div class="col-md-4 col-xs-4">
     <div class="row">
         <div class="col-md-4 col-xs-4">
-        <input type=text name=rok_b id=date2 class=form-control>
+        <input type=date name=rok_b class=form-control id=date3 value={{Input::old('rok_a')}}>
             
             </div>
                  <div class="col-md-5 col-xs-5">
@@ -704,7 +704,32 @@
         
         
     </div>
-</form>
+</div>
+
+
+    </form>
+    
+<form action={{url('pokaz_pdf')}}>
+    <div class="col-md-4 col-xs-4">
+    
+    </div>
+    <div class="col-md-2 col-xs-3">
+        
+        <input type=date name=rok_aa class=form-control id=date8 value={{Input::old('rok_a')}}>
+        
+    </div>
+    <div class="col-md-2 col-xs-3">
+        
+        <input type=date name=rok_bb class=form-control id=date8 value={{Input::old('rok_a')}}>
+        
+    </div>
+    <div class="col-md-2 col-xs-3">
+        
+        <button  class="btn btn-primary" >Generuj</button>
+        
+    </div>
+    </form>    
+
 <script language="javascript">
 
 

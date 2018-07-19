@@ -183,7 +183,7 @@ class Controller_szukaj extends BaseController
 
        if (Input::get("nastroj_od") != "" or Input::get("nastroj_do") != "" or Input::get('lek_od') != "" or Input::get('lek_do') != "" or Input::get('pobudzenie_od') != "" or Input::get('pobudzenie_do') != "" or Input::get('zdenerowania_od') != "" or Input::get('zdenerowania_do') != "" or Input::get('nastroj_rok') != "" or Input::get('nastroj_miesiac') != "" or Input::get('nastroj_dzien') != "" or Input::get('nastroj_rok2') != ""  or Input::get('nastroj_miesiac2') != ""  or Input::get('nastroj_dzien2') != "" or Input::get('opis') != "" or Input::get('nastroj_godzina') != "" or Input::get('nastroj_godzina2') != "") {
 
-            if (Input::get('opis') != "") {
+          if (Input::get('opis') != "") {
             
             $opis = Input::get('opis');
             $users .= " and co_robilem like '%$opis%' ";
@@ -236,40 +236,40 @@ class Controller_szukaj extends BaseController
          
          else {
          
-         if (Input::get('nastroj_rok') != "") {
-         $users .= " and year(godzina_zaczecia) >=" . Input::get('nastroj_rok') ;
-         $liczba_rekordow .= " and year(godzina_zaczecia) >=" . Input::get('nastroj_rok') ;
-         }
-         if (Input::get('nastroj_miesiac') != "") {
-         $users .= " and month(godzina_zaczecia) >=" . Input::get('nastroj_miesiac') ;
-         $liczba_rekordow .= " and month(godzina_zaczecia) >=" . Input::get('nastroj_miesiac');
-         }
-         if (Input::get('nastroj_dzien') != "") {
-         $users .= " and day(godzina_zaczecia) >=" . Input::get('nastroj_dzien') ;
-         $liczba_rekordow .= " and day(godzina_zaczecia) >=" . Input::get('nastroj_dzien') ;
-         }
-         if (Input::get('nastroj_rok2') != "") {
-         $users .= " and year(godzina_zaczecia) <=" . Input::get('nastroj_rok2') ;
-         $liczba_rekordow .= " and year(godzina_zaczecia) <=" . Input::get('nastroj_rok2') ;
-         }
-         if (Input::get('nastroj_miesiac2') != "") {
-         
-         $users .= " and month(godzina_zaczecia) <=" . Input::get('nastroj_miesiac2');
-         $liczba_rekordow .= " and month(godzina_zaczecia) <=" . Input::get('nastroj_miesiac2');
-         }
-         if (Input::get('nastroj_dzien2') != "") {
-         $users .= " and day(godzina_zaczecia) <=" . Input::get('nastroj_dzien2') ;
-         $liczba_rekordow .= " and day(godzina_zaczecia) <=" . Input::get('nastroj_dzien2') ;
-         }
-         if (Input::get('nastroj_godzina') != "") {
-         //print "dupa";
-         $users .= " and hour(godzina_zaczecia) >=" . Input::get('nastroj_godzina');
-         $liczba_rekordow .= " and hour(godzina_zaczecia) >=" . Input::get('nastroj_godzina');
-         }
-         if (Input::get('nastroj_godzina2') != "") {
-         $users .= " and hour(godzina_zaczecia) <=" . Input::get('nastroj_godzina2') ;
-         $liczba_rekordow .= " and hour(godzina_zaczecia) <=" . Input::get('nastroj_godzina2') ;
-         }
+	  if (Input::get('nastroj_rok') != "") {
+	    $users .= " and year(godzina_zaczecia) >=" . Input::get('nastroj_rok') ;
+	    $liczba_rekordow .= " and year(godzina_zaczecia) >=" . Input::get('nastroj_rok') ;
+	  }
+	  if (Input::get('nastroj_miesiac') != "") {
+	    $users .= " and month(godzina_zaczecia) >=" . Input::get('nastroj_miesiac') ;
+	    $liczba_rekordow .= " and month(godzina_zaczecia) >=" . Input::get('nastroj_miesiac');
+	  }
+	  if (Input::get('nastroj_dzien') != "") {
+	    $users .= " and day(godzina_zaczecia) >=" . Input::get('nastroj_dzien') ;
+	    $liczba_rekordow .= " and day(godzina_zaczecia) >=" . Input::get('nastroj_dzien') ;
+	  }
+	  if (Input::get('nastroj_rok2') != "") {
+	    $users .= " and year(godzina_zaczecia) <=" . Input::get('nastroj_rok2') ;
+	    $liczba_rekordow .= " and year(godzina_zaczecia) <=" . Input::get('nastroj_rok2') ;
+	  }
+	  if (Input::get('nastroj_miesiac2') != "") {
+	  
+	    $users .= " and month(godzina_zaczecia) <=" . Input::get('nastroj_miesiac2');
+	    $liczba_rekordow .= " and month(godzina_zaczecia) <=" . Input::get('nastroj_miesiac2');
+	  }
+	  if (Input::get('nastroj_dzien2') != "") {
+	    $users .= " and day(godzina_zaczecia) <=" . Input::get('nastroj_dzien2') ;
+	    $liczba_rekordow .= " and day(godzina_zaczecia) <=" . Input::get('nastroj_dzien2') ;
+	  }
+	  if (Input::get('nastroj_godzina') != "") {
+	  //print "dupa";
+	    $users .= " and hour(godzina_zaczecia) >=" . Input::get('nastroj_godzina');
+	    $liczba_rekordow .= " and hour(godzina_zaczecia) >=" . Input::get('nastroj_godzina');
+	  }
+	  if (Input::get('nastroj_godzina2') != "") {
+	    $users .= " and hour(godzina_zaczecia) <=" . Input::get('nastroj_godzina2') ;
+	    $liczba_rekordow .= " and hour(godzina_zaczecia) <=" . Input::get('nastroj_godzina2') ;
+	  }
          }
         
    
@@ -280,12 +280,12 @@ class Controller_szukaj extends BaseController
             GROUP BY 
             nastroj.id
             HAVING
-                COUNT(DISTINCT LEKI.ID) = " .  $this->ilosc_lekow . ") ";
+                COUNT(DISTINCT leki.id) = " .  $this->ilosc_lekow . ") ";
             $liczba_rekordow .= "
                 GROUP BY 
                 nastroj.id
                 HAVING
-                COUNT(DISTINCT LEKI.ID) = " .  $this->ilosc_lekow . ") ";
+                COUNT(DISTINCT leki.id) = " .  $this->ilosc_lekow . ") ";
     }   
     
              $sortuj = Input::get("sortuj");
@@ -318,7 +318,7 @@ class Controller_szukaj extends BaseController
             $data2 = 0;
            }
            else {
-           $data2 = explode(" ",$this->zapytanie2[$i-1][0]);
+	    $data2 = explode(" ",$this->zapytanie2[$i-1][0]);
            }
             if ( $data[0] != $data2[0]) {
                 

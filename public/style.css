@@ -414,28 +414,62 @@ span.normalna4 {
     padding: 5px 10px;
 
 }
+/*
+ * 
+ * 
+ * 
+ * 
+ *         if ($liczba > 22) return "div11 opacity";
+        else if ($liczba >= -20 and $liczba < -12) return  "div2 radios";
+        else if ($liczba > -12 and $liczba <= -9) return "div3 radios";
+        else if ($liczba > -9 and $liczba <= -6) return "div4 radios";
+        else if ($liczba > -6 and $liczba <= -3) return "div5 radios";
+        else if ($liczba > -3 and $liczba <= -1) return "div6 radios";
+        else if ($liczba > -1 and $liczba < 0) return "div16 radios";
+        else if ($liczba >= 0  and $liczba < 0.29) return  "div14 radios";
+        else if ($liczba >= 0.29  and $liczba < 0.75) return  "div17 radios";
+        else if ($liczba >= 0.75 and $liczba <= 1) return  "div8 radios";
+	else if ($liczba >= 1 and $liczba <= 2) return  "div18 radios";
+        else if ($liczba > 2 and $liczba <= 4) return "div15 radios";
+        else if ($liczba > 4 and $liczba < 7) return  "div9 radios";
+        else if ($liczba > 7 and $liczba < 10) return  "div10 radios";
+        else if ($liczba > 10 and $liczba < 14) return  "div11 radios";
+        else if ($liczba > 14 and $liczba <= 20) return "div12 radios";
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */
+.div18 {
+ background-color: #fbf187;
+}
 .div1 {
-  background-color: #000000;
+  background-color: #080808;
     
 }
 .div2 {
- background-color: #4C4646;
+ background-color: #373737;
     
 }
 .div3 {
- background-color: #666060;
+ background-color: #707070;
     
 }
 .div4 {
- background-color: #857F7F;
+ background-color: #888888;
     
 }
 .div5 {
- background-color: #595851;
+ background-color: #9a999a;
     
 }
 .div6 {
- background-color: #CCC8B6;
+ background-color: #c0c0c0;
     
 }
 .div7 {
@@ -443,16 +477,16 @@ span.normalna4 {
     
 }
 .div8 {
- background-color: #E5E345;
+ background-color: #dbe195;
     
 }
 .div9 {
- background-color: #9FCC25;
+ background-color: #e5f15b;
     
 }
 
 .div10 {
- background-color: green;
+ background-color: #ecff1d;
     
 }
 
@@ -461,22 +495,30 @@ span.normalna4 {
  color: white;
 
 }
+.div20 {
+  
+ background-color: #b7fb66 ;
+}
 
 .div12 {
- background-color: green;
+ background-color: #53cd1e;
     
 }
 .div14 {
     
- background-color: #F0EDB4;
+ background-color: #ededec;
 }
 .div15 {
     
- background-color: #C4C431;
+ background-color: #d7e077;
 }
 .div16 {
     
- background-color: #CFCFA5;
+ background-color: #cdcdcd;
+}
+.div17 {
+  
+ background-color: #faf69b
 }
 .szukaj {
     

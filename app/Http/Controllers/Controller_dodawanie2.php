@@ -66,10 +66,10 @@ class Controller_dodawanie2 extends BaseController
         //print Input::get('godzina_a');
         
         }
-        $godzina_a = $godzina_aa[0];
-        $minuta_a = $godzina_aa[1];
-        $godzina_b = $godzina_bb[0];
-        $minuta_b = $godzina_bb[1];
+        $godzina_a = (int) $godzina_aa[0];
+        $minuta_a = (int) $godzina_aa[1];
+        $godzina_b = (int) $godzina_bb[0];
+        $minuta_b = (int) $godzina_bb[1];
         $wynik = $data3->sprawdz_date($rok_a,$miesiac_a,$dzien_a,$godzina_a,$minuta_a,false);
         $wynik2 = $data3->sprawdz_date($rok_b,$miesiac_b,$dzien_b,$godzina_b,$minuta_b);
         $wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b,false);

@@ -1,6 +1,12 @@
   $( function() {
     
     $( "#date2" ).datepicker({dateFormat: "yy-mm-dd"});
+    $( "#date3" ).datepicker({dateFormat: "yy-mm-dd"});
+    $( "#date4" ).datepicker({dateFormat: "yy-mm-dd"});
+    $( "#date5" ).datepicker({dateFormat: "yy-mm-dd"});
+    $( "#date6" ).datepicker({dateFormat: "yy-mm-dd"});
+    $( "#date7" ).datepicker({dateFormat: "yy-mm-dd"});
+    $( "#date8" ).datepicker({dateFormat: "yy-mm-dd"});
     
   } );
   
