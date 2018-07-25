@@ -1,5 +1,13 @@
 <?php
+/*
+Copyright 2018 roku Autor Tomasz Leszczyński <tomi0001@gmail.com>
 
+
+
+
+
+
+*/
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -89,7 +97,7 @@ class Controller_szukaj extends BaseController
                     else {
                         $tablica[$j][1] = false;
                     }
-                    //print "<br>$strona";
+                    
                     $j++;
                 }
                 elseif ($i+5 > $strona and  $i-5 < $strona) {

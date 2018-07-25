@@ -1,5 +1,13 @@
 <?php
+/*
+Copyright 2018 roku Autor Tomasz Leszczyński <tomi0001@gmail.com>
 
+
+
+
+
+
+*/
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -83,10 +91,7 @@ class Controller_strona extends BaseController
     
     
     public function glowna($rok = "",$miesiac = "",$dzien = "",$akcja = "") {
-	//$a = array();
-	
-	//var_dump($a);
-	//$this->generate_pdf();
+
         $data3 = new \App\Http\Controllers\data();
 
         //zmienna potrzebna do przechowywania ustawień zmiennych aktualnie wykonywanych do ustawień miesiąca
@@ -121,7 +126,6 @@ class Controller_strona extends BaseController
         $miesiac2 = $this->zwroc_miesiac_text($date[0]);
         $tablica_godzin3 = array();
   
-            //$rok_zaczecia = $data3->rok_zaczecia(Auth::User()->id);
             $sprawdz = $this->wyciagnij_godzine_ostatniego_wpisu(Auth::User()->id);
             if ($sprawdz == 0) {
                 $tablica_godzin2 = $data3->rysuj_dla_godziny(date("H"),1);
@@ -158,8 +162,7 @@ class Controller_strona extends BaseController
             $this->wpisy = $data3->okresl_dlugosc_daty_w_procentach($this->wpisy);
             $this->okres_kolor_dla_diva();
             $ilosc_nastrojow = count($this->wpisy);
-	    //$a = $this->generate_pdf();
-	    //var_dump($this->wpisy2);
+	
             return View('glowna')->with('miesiac',$date[0])
             ->with('miesiac2',$miesiac2)
             ->with('rok',$date[1])
@@ -220,7 +223,7 @@ class Controller_strona extends BaseController
             
         }
         $wynik = $this->oblicz_ile_czasu_trwaly_nastroje_danego_dnia($rok,$miesiac,$dzien);
-        //print "<font color=green>" . $poszczegolne_dane2->nastroj . "</font>";
+       
         if (empty($poszczegolne_dane2->nastroj) ) return null;
         else return (int)round(( $wynik[1] / $wynik[0] ));
     }
@@ -279,7 +282,7 @@ class Controller_strona extends BaseController
     }
     
     private function wybierz_kolor_dla_dnia($liczba) {
-        //print $liczba;
+        
         
         
         if ($liczba > 22) return "div11 opacity";
@@ -291,8 +294,8 @@ class Controller_strona extends BaseController
         else if ($liczba > -1 and $liczba < 0) return "div16 radios";
         else if ($liczba >= 0  and $liczba < 0.29) return  "div14 radios";
         else if ($liczba >= 0.29  and $liczba < 0.75) return  "div17 radios";
-        else if ($liczba >= 0.75 and $liczba <= 1) return  "div8 radios";
-        else if ($liczba >= 1 and $liczba <= 2) return  "div18 radios";
+        else if ($liczba >= 0.75 and $liczba <= 1) return  "div18 radios";
+        else if ($liczba >= 1 and $liczba <= 2) return  "div8 radios";
         else if ($liczba > 2 and $liczba <= 4) return "div15 radios";
         else if ($liczba > 4 and $liczba < 7) return  "div9 radios";
         else if ($liczba > 7 and $liczba < 10) return  "div10 radios";
@@ -520,7 +523,7 @@ class Controller_strona extends BaseController
     return array($rok,$miesiac);
   }
     private function oblicz_nastroj($rok,$miesiac) {
-        //$data_pocztakowa = $rok
+        
         $id_users = Auth::User()->id;
         $nastroj = array();
         $baza_nastrojow = DB::select("SELECT poziom_leku,poziom_nastroju  FROM `nastroj` WHERE YEAR(data) = '$rok' and month(data) = '$miesiac' and id_users = '$id_users' ");

@@ -1,4 +1,13 @@
 <?php
+/*
+Copyright 2018 roku Autor Tomasz Leszczyński <tomi0001@gmail.com>
+
+
+
+
+
+
+*/
 namespace App\Http\Controllers;
    use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -38,7 +47,7 @@ class data extends BaseController
             
             return $data1;
         }
-            public function rysuj_dla_godziny($godzina,$status) {
+        public function rysuj_dla_godziny($godzina,$status) {
         if ($status == 1) {
             $aktualna_godzina = $godzina- 1;
             if ($aktualna_godzina < 0) {
@@ -61,7 +70,7 @@ class data extends BaseController
         
         if ( strlen($aktualna_godzina) == 1) $aktualna_godzina = "0" . $aktualna_godzina;
         return $aktualna_godzina;
-    }
+        }
     
         public function rysuj_dla_minuty($sprawdz = "") {
         if ($sprawdz != "") {
@@ -72,11 +81,11 @@ class data extends BaseController
         }
         
         return $aktualna_minuta;
-    }
+        }
     
     public function porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b,$bool) {
         //jeżeli bool jest true to znaczy, że 
-     //   print $godzina_a;
+     
         $wynik = (int)$godzina_b - (int)$godzina_a;
         if ($bool == false) return 0;
         if ($bool == true) {
@@ -90,10 +99,10 @@ class data extends BaseController
         if ($wynik > 10) return -5;
         return 0;
     
-    }//php artisan migrate:make 2018_06_07_095037_create_projects_table 
+    }
 
     
-        public function rok_zaczecia($id_user)  {
+    public function rok_zaczecia($id_user)  {
         $tablica = array();
         $najmlodszy_rok = DB::select("select year(godzina_zaczecia) as godzina_zaczecia from nastroj where id_users = '$id_user' order by godzina_zaczecia limit 1");
         foreach ($najmlodszy_rok as $najmlodszy_rok2) {
@@ -112,7 +121,7 @@ class data extends BaseController
         return $tablica;
     }
     
-        public function sprawdz_czy_cos_robilem($id_nastroj) {
+    public function sprawdz_czy_cos_robilem($id_nastroj) {
         $sprawdz = DB::select("select co_robilem from nastroj where id = '$id_nastroj' ");
         foreach ($sprawdz as $sprawdz2) {
             
@@ -122,7 +131,7 @@ class data extends BaseController
         
     }
     
-        public function okres_kolor_dla_diva($wpisy,$status = true) {
+    public function okres_kolor_dla_diva($wpisy,$status = true) {
         if ($status == false) {
             $j = 5;
         }
@@ -180,7 +189,7 @@ class data extends BaseController
         
     }
     
-        public function sprawdz_czy_bralem_leki_dla_danego_dnia($id_nastroj) {
+    public function sprawdz_czy_bralem_leki_dla_danego_dnia($id_nastroj) {
         $sprawdz = DB::select("SELECT id_nastroj FROM `przekierowanie_lekow` WHERE id_nastroj = '$id_nastroj' ");
         foreach ($sprawdz as $sprawdz2) {
             if ( isset($sprawdz2->id_nastroj) ) return true;
@@ -220,7 +229,7 @@ class data extends BaseController
         
     }
     public function porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b,$status = true) {
-    //print "kupa";
+    
        if ($rok_a == "" and $miesiac_a == "" and $dzien_a == "" and $rok_b == "" and $miesiac_b == "" and $dzien_b == "") {
         $data1 = $this->porownaj_dwie_daty2($godzina_a,$minuta_a,$godzina_b,$minuta_b,false);
         return $data1;
@@ -311,7 +320,7 @@ class data extends BaseController
         
     }
     
-        public function dodaj_pojedynczy_lek($leki,$leki2,$leki3,$data) {
+    public function dodaj_pojedynczy_lek($leki,$leki2,$leki3,$data) {
         $id_users = Auth::User()->id;
         
         DB::insert("insert into leki  (nazwa,data_spozycia,id_users,dawka,porcja) values('$leki','$data','$id_users','$leki2','$leki3')");
@@ -324,7 +333,7 @@ class data extends BaseController
         
     }
     
-        public function dodaj_przekierowanie_leku($id_leku,$id_nastroju) {
+    public function dodaj_przekierowanie_leku($id_leku,$id_nastroju) {
         DB::insert("insert into przekierowanie_lekow  (id_leku,id_nastroj) values('$id_leku','$id_nastroju')");
     }
     

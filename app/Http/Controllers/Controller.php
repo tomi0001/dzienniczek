@@ -1,5 +1,13 @@
 <?php
+/*
+Copyright 2018 roku Autor Tomasz Leszczyński <tomi0001@gmail.com>
 
+
+
+
+
+
+*/
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;

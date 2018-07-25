@@ -1,5 +1,13 @@
 <?php
+/*
+Copyright 2018 roku Autor Tomasz Leszczyński <tomi0001@gmail.com>
 
+
+
+
+
+
+*/
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -57,13 +65,13 @@ class Controller_dodawanie2 extends BaseController
             $godzina_bb = "00:00:00";
         }
         else {
-        $godzina_aa = explode(":",Input::get('godzina_a'));
-        
-        $godzina_bb = explode(":",Input::get('godzina_b'));
-        
-        
-        $wybudzenia = Input::get('wybudzenia');
-        //print Input::get('godzina_a');
+            $godzina_aa = explode(":",Input::get('godzina_a'));
+            
+            $godzina_bb = explode(":",Input::get('godzina_b'));
+            
+            
+            $wybudzenia = Input::get('wybudzenia');
+            
         
         }
         $godzina_a = (int) $godzina_aa[0];
@@ -127,7 +135,6 @@ class Controller_dodawanie2 extends BaseController
             return back()->withInput()->withErrors($bledy);
       
         }
-        //var_dump($bledy);
         
         
         
@@ -137,8 +144,7 @@ class Controller_dodawanie2 extends BaseController
             
         
         }
-        //$wynik3 = $data3->porownaj_dwie_daty($rok_a,$rok_b,$miesiac_a,$miesiac_b,$dzien_a,$dzien_b,$godzina_a,$godzina_b,$minuta_a,$minuta_b);
-      //  print $data11 . "<br>" . $data22;
+      
     }
     private function zapisz_sen($data1,$data2,$wybudzenia) {
         if ($wybudzenia == "") $wybudzenia = 0;
